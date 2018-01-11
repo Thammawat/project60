@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.17.1",
     "babel-polyfill": "^6.26.0",
     "babel-register": "^6.26.0",
     "bluebird": "^3.5.1",
@@ -10,8 +11,10 @@
     "express": "^4.16.2",
     "file-loader": "^1.1.5",
     "fs": "^0.0.1-security",
+    "google-map-react": "^0.26.0",
     "html-webpack-plugin": "^2.30.1",
     "isomorphic-fetch": "^2.2.1",
+    "mongoose": "^5.0.0-rc1",
     "node-sass": "^4.5.3",
     "path": "^0.12.7",
     "react": "^16.0.0",
