@@ -26,3 +26,37 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.burger {
+  margin:20px;
+  position:relative;
+  z-index:3;
+  color:#616161;
+  cursor: pointer;
+}
+
+.sideBar {
+  width: 22vw;
+  height: 100vh;
+  position: fixed;
+  z-index: 3;
+  background-color: #373a47;
+}
+
+.BgSideBar {
+  width:100%;
+  height: 100%;
+  position: fixed;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.SidebarCancelArea {
+  width:100%;
+  text-align:right;
+  color:#EEEEEE;
+}
+
+.CancelSidebarButton {
+  margin: 15px;
+}
