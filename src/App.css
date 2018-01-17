@@ -41,7 +41,6 @@
   position: fixed;
   z-index: 3;
   background-color: #373a47;
-  transition: width 2s;
 }
 
 .BgSideBar {
