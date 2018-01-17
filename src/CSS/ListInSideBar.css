@@ -1,0 +1,15 @@
+.SideBarList {
+  padding: 1em;
+  color:#E0E0E0;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.4s;
+}
+
+.SideBarList:hover{
+  background: #272a37;
+}
+
+span.listName {
+  font-size: 22px;
+}

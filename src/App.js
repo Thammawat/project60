@@ -4,6 +4,7 @@ import './App.css';
 import busStop from './icon.png';
 import GoogleMapReact from 'google-map-react';
 import Fa from 'react-fa';
+import SideBarList from './template/ListInSideBar.js'
 
 class App extends Component {
   constructor(){
@@ -40,6 +41,8 @@ class App extends Component {
               <div className="sideBar">
                 <div className="SidebarCancelArea">
                   <Fa name="times" size="lg" className="CancelSidebarButton" onClick={()=>this.changeBurgerToggle()}/>
+                  <SideBarList listName="Feature1" />
+                  <SideBarList listName="Feature2" />
                 </div>
               </div>
               <div className="BgSideBar" onClick={()=>this.changeBurgerToggle()}>
