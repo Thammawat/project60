@@ -12,7 +12,7 @@ class List extends Component {
   render(){
     return(
       <div>
-        <div className="SideBarList">
+        <div className="SideBarList" onClick={()=>this.props.selectedOption(this.props.menu)}>
           <span className="listName">{this.props.listName}</span>
         </div>
       </div>

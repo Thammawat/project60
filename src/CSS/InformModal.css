@@ -1,0 +1,9 @@
+.Modal {
+  margin-left:29vw;
+  margin-top: 10vh;
+  width:60vw;
+  z-index:3;
+  text-align:center;
+  background:#EEEEEE;
+  padding: 1em 1.5em;
+}
