@@ -1,9 +1,66 @@
 .Modal {
-  margin-left:29vw;
-  margin-top: 10vh;
-  width:60vw;
+  position: fixed;
+  left:35vw;
+  top: 10vh;
+  width:50vw;
   z-index:3;
-  text-align:center;
   background:#EEEEEE;
-  padding: 1em 1.5em;
+  padding: 1em 2em;
+  border-top: 4px solid #373a47;
+  border-radius: 5px;
+}
+
+.ModalTopic {
+  text-align: center;
+  width: 100%;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.ModalBody {
+  width:100%;
+  padding: 1em 1em 0em 1em;
+  font-size: 20px;
+}
+
+input {
+  width:200px;
+  font-size: 18px;
+  font-family: 'Prompt';
+  margin:0em 1em;
+  padding: 0em 0.5em;
+  border-radius: 3px;
+  border: 1px solid #A9A9A9;
+  /* box-shadow: 1px 1px 1px rgba(55, 58, 71, 0.7); */
+  outline:none;
+}
+
+
+.HalfSide {
+  display: inline-block;
+}
+
+button {
+  font-weight: bold;
+  font-family: 'Prompt';
+  font-size: 20px;
+  height:2.5em;
+  width: 5em;
+  background-color: #EEEEEE;
+  color:#373a47;
+  outline:none;
+  border-radius: 10px;
+  border:2px solid #373a47;
+  margin-right: 1em;
+}
+
+button:hover ,button:focus{
+  border:2px solid #373a47;
+  color:#EEEEEE;
+  background-color: #373a47;
+}
+
+.ButtonArea {
+  margin: 1.5em;
+  text-align: right;
 }

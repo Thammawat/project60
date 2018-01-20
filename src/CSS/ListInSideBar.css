@@ -1,7 +1,7 @@
 .SideBarList {
   padding: 1em;
   color:#E0E0E0;
-  text-align: center;
+  text-align: left;
   cursor: pointer;
   transition: background 0.4s;
 }
@@ -11,5 +11,6 @@
 }
 
 span.listName {
+  margin:0em 1em;
   font-size: 20px;
 }

@@ -51,13 +51,13 @@ class App extends Component {
                 <div className="SidebarCancelArea">
                   <Fa name="times" size="lg" className="CancelSidebarButton" onClick={()=>this.changeBurgerToggle()}/>
                 </div>
-                <SideBarList listName="Feature1" selectedOption={this.selectedOption}
+                <SideBarList listName="ค้นหาเส้นทาง" icon="road" selectedOption={this.selectedOption}
                 menu='1'/>
-                <SideBarList listName="Feature2" selectedOption={this.selectedOption}
+                <SideBarList listName="สายรถเมย์" icon="bus" selectedOption={this.selectedOption}
                 menu='2'/>
               </div>
+              <Modal select={this.state.option}/>
               <div className="BgSideBar" onClick={()=>this.changeBurgerToggle()}>
-                <Modal select={this.state.option}/>
               </div>
             </div>
         }

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import '../CSS/ListInSideBar.css';
+import Fa from 'react-fa';
 
 class List extends Component {
   constructor(){
@@ -13,6 +14,7 @@ class List extends Component {
     return(
       <div>
         <div className="SideBarList" onClick={()=>this.props.selectedOption(this.props.menu)}>
+          <Fa name={this.props.icon} size="1x" />
           <span className="listName">{this.props.listName}</span>
         </div>
       </div>
