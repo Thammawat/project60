@@ -28,7 +28,7 @@
 }
 
 .burger {
-  margin:20px;
+  margin: 9px 20px;
   position:relative;
   z-index:3;
   color:#616161;
@@ -60,4 +60,13 @@
 
 .CancelSidebarButton {
   margin: 15px;
+}
+
+.UserIcon {
+  float: right;
+  margin: 9px 50px 20px 20px;
+  position:relative;
+  z-index:3;
+  color:#616161;
+  cursor: pointer;
 }

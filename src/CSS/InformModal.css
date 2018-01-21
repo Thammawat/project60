@@ -1,6 +1,6 @@
 .Modal {
   position: fixed;
-  left:35vw;
+  left:33vw;
   top: 10vh;
   width:50vw;
   z-index:3;
@@ -51,7 +51,7 @@ button {
   outline:none;
   border-radius: 10px;
   border:2px solid #373a47;
-  margin-right: 1em;
+  
 }
 
 button:hover ,button:focus{

@@ -61,6 +61,7 @@ class App extends Component {
               </div>
             </div>
         }
+        <Fa name="user-circle-o" size="2x" className="UserIcon"/>
       </div>
     );
   }

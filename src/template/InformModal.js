@@ -20,7 +20,7 @@ class Modal extends Component {
               </div>
               <div className="ModalBody">
                 <div className="HalfSide">
-                  <span>ต้นทาง</span>
+                  <span>จุดเริ่มต้น</span>
                   <input type="text"/>
                 </div>
                 <div className="HalfSide">
@@ -38,6 +38,13 @@ class Modal extends Component {
           ? <div className="Modal animated fadeInUp">
               <div className="ModalTopic">
                 <span>สายรถเมย์</span>
+              </div>
+              <div className="ModalBody">
+                <span>สายการเดินรถ</span>
+                <input type="text"/>
+                <div className="ButtonArea">
+                  <button>ค้นหา</button>
+                </div>
               </div>
             </div>
           : null
