@@ -1,12 +1,16 @@
 import React, {Component} from 'react';
 import '../CSS/InformModal.css';
 import '../animate.css';
+import SearchBox from './SearchBox.js'
 
 class Modal extends Component {
   constructor(){
     super();
     this.state = {
-
+      libraries:[
+        {name:'hello'},
+        {name:'world'}
+      ],
     };
   }
 
@@ -21,14 +25,14 @@ class Modal extends Component {
               <div className="ModalBody">
                 <div className="HalfSide">
                   <span>จุดเริ่มต้น</span>
-                  <input type="text"/>
+                  <SearchBox item={this.state.libraries}/>
                 </div>
                 <div className="HalfSide">
                   <span>ปลายทาง</span>
-                  <input type="text"/>
+                  <input type="text" className="SearchBox"/>
                 </div>
                 <div className="ButtonArea">
-                  <button>ค้นหา</button>
+                  <button className="SearchButton">ค้นหา</button>
                 </div>
               </div>
             </div>
@@ -41,9 +45,9 @@ class Modal extends Component {
               </div>
               <div className="ModalBody">
                 <span>สายการเดินรถ</span>
-                <input type="text"/>
+                <input type="text" className="SearchBox"/>
                 <div className="ButtonArea">
-                  <button>ค้นหา</button>
+                  <button className="SearchButton">ค้นหา</button>
                 </div>
               </div>
             </div>

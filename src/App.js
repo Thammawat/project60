@@ -17,6 +17,7 @@ class App extends Component {
       zoom: 11,
       burgerToggle: false,
       option: null,
+      userToggle: false,
     };
   }
 
@@ -24,6 +25,13 @@ class App extends Component {
     this.setState({
       burgerToggle: !this.state.burgerToggle,
       option: null,
+      userToggle: false,
+    })
+  }
+
+  changeUserToggle=()=>{
+    this.setState({
+      userToggle: !this.state.userToggle,
     })
   }
 
@@ -35,7 +43,7 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.option)
+    console.log(this.state.userToggle )
     return (
       <div>
         <GoogleMapReact
@@ -61,7 +69,22 @@ class App extends Component {
               </div>
             </div>
         }
-        <Fa name="user-circle-o" size="2x" className="UserIcon"/>
+        <Fa name="user-circle-o" size="2x" className="UserIcon" onClick={()=>this.changeUserToggle()}/>
+        {this.state.userToggle === true
+          ? <div>
+              <div className="LoginModal animated fadeInDown">
+                <div style={{width:'100%',textAlign:'center'}}>
+                  <span className="Warning">เฉพาะเจ้าหน้าที่เท่านั้น</span>
+                </div>
+                <input type="text" placeholder="บัญชีผู้ใช้" className="FillForm"/>
+                <input type="password" placeholder="รหัสผ่าน" className="FillForm"/>
+                <div style={{width:'100%',textAlign:'center'}}>
+                  <button className="LoginButton">เข้าสู่ระบบ</button>
+                </div>
+              </div>
+            </div>
+          : null
+        }
       </div>
     );
   }
