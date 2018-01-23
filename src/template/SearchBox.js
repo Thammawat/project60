@@ -17,23 +17,28 @@ class SearchBox extends Component{
     })
   }
 
-  autoComplete=(data)=>{
-    this.setState({
-      searchString: data,
-      showItem: false,
-    })
-  }
 
-  onBlur=()=>{
+  autoComplete=()=>{
+    if(this.state.currentItem != ''){
+      this.setState({
+        searchString: this.state.currentItem,
+      })
+    }
     this.setState({
-      searchString: this.state.currentItem,
       showItem:false,
+      currentItem: '',
     })
   }
 
   onFocus=()=>{
     this.setState({
       showItem:true,
+    })
+  }
+
+  onBlur=()=>{
+    this.setState({
+      currentItem: '',
     })
   }
 
@@ -55,14 +60,15 @@ class SearchBox extends Component{
         return i.name.toLowerCase().match(searchString);
       });
     }
+    console.log(this.state.currentItem)
     return(
       <div style={{display:'inline-block'}}>
         <div className="DropdownSearchbox">
-          <input type="text" value={this.state.searchString} onChange={this.handleSearch} placeholder="type here..." className="SearchBox2" onFocus={()=>this.onFocus()} onBlur={()=>this.onBlur()}/>
+          <input type="text" value={this.state.searchString} onChange={this.handleSearch} placeholder="type here..." className="SearchBox2" onFocus={()=>this.onFocus()} onBlur={()=>this.autoComplete()}/>
           {this.state.searchString != '' && this.state.showItem === true
             ? <ul>
                 {libraries.map(function(i){
-                  return <li key={i.name} onMouseOver={()=>this.hoverItem(i.name)}>{i.name}</li>
+                  return <li key={i.name} onMouseOver={()=>this.hoverItem(i.name)} onMouseOut={()=>this.onBlur()}>{i.name}</li>
                 }.bind(this))}
               </ul>
             : null
