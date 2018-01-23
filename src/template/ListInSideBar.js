@@ -14,7 +14,7 @@ class List extends Component {
     return(
       <div>
         <div className="SideBarList" onClick={()=>this.props.selectedOption(this.props.menu)}>
-          <Fa name={this.props.icon} size="1x" />
+          <Fa name={this.props.icon} />
           <span className="listName">{this.props.listName}</span>
         </div>
       </div>

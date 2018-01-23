@@ -8,8 +8,11 @@ class Modal extends Component {
     super();
     this.state = {
       libraries:[
-        {name:'hello'},
-        {name:'world'}
+        {name:'ลาดกระบัง'},
+        {name:'สนามบินสุวรรณภูมิ'},
+        {name:'เมกะ บางนา'},
+        {name:'อนุเสาวรีย์ชัยสมรภูมิ'},
+        {name:'บ้านไอ้โด่ง'}
       ],
     };
   }
@@ -29,7 +32,7 @@ class Modal extends Component {
                 </div>
                 <div className="HalfSide">
                   <span>ปลายทาง</span>
-                  <input type="text" className="SearchBox"/>
+                  <SearchBox item={this.state.libraries}/>
                 </div>
                 <div className="ButtonArea">
                   <button className="SearchButton">ค้นหา</button>
@@ -45,7 +48,7 @@ class Modal extends Component {
               </div>
               <div className="ModalBody">
                 <span>สายการเดินรถ</span>
-                <input type="text" className="SearchBox"/>
+                <SearchBox item={this.state.libraries}/>
                 <div className="ButtonArea">
                   <button className="SearchButton">ค้นหา</button>
                 </div>
