@@ -33,10 +33,10 @@ class UserOptionModal extends Component{
                 image={UserPic}
                 width={150}
                 height={150}
-                border={50}
+                border={10}
                 borderRadius={200}
                 color={[0, 0, 0, 0.6]} // RGBA
-                scale={1.2}
+                scale={1.8}
                 rotate={0}
               />
               </div>
