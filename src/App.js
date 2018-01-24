@@ -6,7 +6,10 @@ import busStop from './icon.png';
 import GoogleMapReact from 'google-map-react';
 import Fa from 'react-fa';
 import SideBarList from './template/ListInSideBar.js';
-import Modal from './template/InformModal.js';
+import InformModal from './template/InformModal.js';
+import UserOptionModal from './template/UserOptionModal.js';
+
+import UserPic from './image/user_image.jpg';
 
 
 class App extends Component {
@@ -18,6 +21,11 @@ class App extends Component {
       burgerToggle: false,
       option: null,
       userToggle: false,
+      loginTest: false,
+      userImage: './image/user_image.jpg',
+      username: '',
+      password: '',
+      userChoice: null,
     };
   }
 
@@ -35,10 +43,41 @@ class App extends Component {
     })
   }
 
-  selectedOption=(data)=>{
-    console.log("hello")
+  loginToggle=()=>{
+    this.setState({
+      loginTest: !this.state.loginTest,
+      userToggle: false,
+    })
+  }
+
+  sideBarOption=(data)=>{
     this.setState({
       option: data,
+    })
+  }
+
+  userOption=(data)=>{
+    this.setState({
+      userChoice: data,
+      userToggle: false,
+    })
+  }
+
+  userCancel=()=>{
+    this.setState({
+      userChoice:null,
+    })
+  }
+
+  handleUsername=(e)=>{
+    this.setState({
+      username: e.target.value,
+    })
+  }
+
+  handlePassword=(e)=>{
+    this.setState({
+      password: e.target.value,
     })
   }
 
@@ -59,29 +98,62 @@ class App extends Component {
                 <div className="SidebarCancelArea">
                   <Fa name="times" size="lg" className="CancelSidebarButton" onClick={()=>this.changeBurgerToggle()}/>
                 </div>
-                <SideBarList listName="ค้นหาเส้นทาง" icon="road" selectedOption={this.selectedOption}
+                <SideBarList listName="ค้นหาเส้นทาง" icon="road" selectedOption={this.sideBarOption}
                 menu='1'/>
-                <SideBarList listName="สายรถเมย์" icon="bus" selectedOption={this.selectedOption}
+                <SideBarList listName="สายรถเมย์" icon="bus" selectedOption={this.sideBarOption}
                 menu='2'/>
               </div>
-              <Modal select={this.state.option}/>
-              <div className="BgSideBar" onClick={()=>this.changeBurgerToggle()}>
-              </div>
+              <InformModal select={this.state.option}/>
+              <div className="BgSideBar" onClick={()=>this.changeBurgerToggle()} />
             </div>
         }
-        <Fa name="user-circle-o" size="2x" className="UserIcon" onClick={()=>this.changeUserToggle()}/>
-        {this.state.userToggle === true
+        {this.state.loginTest === false
+          ? <div style={{display:'inline'}}>
+              <Fa name="user-circle-o" size="2x" className="UserIcon" onClick={()=>this.changeUserToggle()}/>
+              {this.state.userToggle === true
+                ? <div>
+                    <div className="LoginModal animated fadeInDown">
+                      <div style={{width:'100%',textAlign:'center'}}>
+                        <span className="Warning">เฉพาะเจ้าหน้าที่เท่านั้น</span>
+                      </div>
+                      <input type="text" value={this.state.username} onChange={this.handleUsername} placeholder="บัญชีผู้ใช้" className="FillForm"/>
+                      <input type="password" value={this.state.password} onChange={this.handlePassword} placeholder="รหัสผ่าน" className="FillForm"/>
+                      <div style={{width:'100%',textAlign:'center'}}>
+                        <button className="LoginButton" onClick={()=>this.loginToggle()}>เข้าสู่ระบบ</button>
+                      </div>
+                    </div>
+                  </div>
+                : null
+              }
+            </div>
+          : <div style={{display:'inline'}}>
+              {this.state.userImage === ''
+                ? <Fa name="user-circle-o" size="2x" className="UserIcon" onClick={()=>this.changeUserToggle()}/>
+                : <img src={UserPic} className="userImage" onClick={()=>this.changeUserToggle()} />
+              }
+              {this.state.userToggle === true
+                ? <div>
+                    <div className="LoginModal animated fadeInDown" style={{padding:'0px'}}>
+                      <div style={{textAlign:'center',padding:'0.5em',borderBottom:'1px solid #A9A9A9'}}>
+                        <span className="Welcome">นายธนนภัช สุโพธิ์</span>
+                      </div>
+                      <div style={{textAlign:'center'}}>
+                        <ul className="UserOption">
+                          <li onClick={()=>this.userOption('1')}>เพิ่มสมาชิกใหม่</li>
+                          <li onClick={()=>this.userOption('2')}>การตั้งค่า</li>
+                          <li onClick={()=>this.loginToggle()} style={{borderRadius:'0px 0px 5px 5px'}}>ออกจากระบบ</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                : null
+              }
+            </div>
+        }
+        {this.state.userChoice != null
           ? <div>
-              <div className="LoginModal animated fadeInDown">
-                <div style={{width:'100%',textAlign:'center'}}>
-                  <span className="Warning">เฉพาะเจ้าหน้าที่เท่านั้น</span>
-                </div>
-                <input type="text" placeholder="บัญชีผู้ใช้" className="FillForm"/>
-                <input type="password" placeholder="รหัสผ่าน" className="FillForm"/>
-                <div style={{width:'100%',textAlign:'center'}}>
-                  <button className="LoginButton">เข้าสู่ระบบ</button>
-                </div>
-              </div>
+              <div className="BgSideBar" onClick={()=>this.userCancel()} />
+              <UserOptionModal option={this.state.userChoice}/>
             </div>
           : null
         }

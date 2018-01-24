@@ -47,8 +47,10 @@ class Modal extends Component {
                 <span>สายรถเมย์</span>
               </div>
               <div className="ModalBody">
-                <span>สายการเดินรถ</span>
-                <SearchBox item={this.state.libraries}/>
+                <div className="HalfSide">
+                  <span>สาย</span>
+                  <SearchBox item={this.state.libraries}/>
+                </div>
                 <div className="ButtonArea">
                   <button className="SearchButton">ค้นหา</button>
                 </div>
