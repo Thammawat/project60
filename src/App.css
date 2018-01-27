@@ -138,8 +138,8 @@ img.userImage {
   margin: 9px 50px 20px 20px;
   position:relative;
   z-index:1;
-  width:30px;
-  height: 30px;
+  width:35px;
+  height: 35px;
   border:2px solid #373A47;
   border-radius: 100%;
 }

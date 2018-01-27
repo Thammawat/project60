@@ -9,7 +9,7 @@ import SideBarList from './template/ListInSideBar.js';
 import InformModal from './template/InformModal.js';
 import UserOptionModal from './template/UserOptionModal.js';
 
-import UserPic from './image/user_image.jpg';
+import Image from'./image/user_image.jpg';
 
 
 class App extends Component {
@@ -22,7 +22,7 @@ class App extends Component {
       option: null,
       userToggle: false,
       loginTest: false,
-      userImage: './image/user_image.jpg',
+      userImage: require('./image/user_image.jpg'),
       username: '',
       password: '',
       userChoice: null,
@@ -129,7 +129,7 @@ class App extends Component {
           : <div style={{display:'inline'}}>
               {this.state.userImage === ''
                 ? <Fa name="user-circle-o" size="2x" className="UserIcon" onClick={()=>this.changeUserToggle()}/>
-                : <img src={UserPic} className="userImage" onClick={()=>this.changeUserToggle()} />
+                : <img src={this.state.userImage} className="userImage" onClick={()=>this.changeUserToggle()} />
               }
               {this.state.userToggle === true
                 ? <div>

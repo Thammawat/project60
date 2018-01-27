@@ -64,7 +64,7 @@ class SearchBox extends Component{
     return(
       <div style={{display:'inline-block'}}>
         <div className="DropdownSearchbox">
-          <input type="text" value={this.state.searchString} onChange={this.handleSearch} placeholder="type here..." className="SearchBox2" onFocus={()=>this.onFocus()} onBlur={()=>this.autoComplete()}/>
+          <input type="text" value={this.state.searchString} onChange={this.handleSearch} placeholder="type here..." className="SearchBox" onFocus={()=>this.onFocus()} onBlur={()=>this.autoComplete()}/>
           {this.state.searchString != '' && this.state.showItem === true
             ? <ul>
                 {libraries.map(function(i){
