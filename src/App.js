@@ -82,7 +82,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.userToggle )
     return (
       <div>
         <GoogleMapReact
@@ -153,7 +152,7 @@ class App extends Component {
         {this.state.userChoice != null
           ? <div>
               <div className="BgSideBar" onClick={()=>this.userCancel()} />
-              <UserOptionModal option={this.state.userChoice}/>
+              <UserOptionModal option={this.state.userChoice} userCancel={this.userCancel}/>
             </div>
           : null
         }

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import '../CSS/UserOptionModal.css';
 import AvatarEditor from 'react-avatar-editor';
+import Fa from 'react-fa';
 
 import UserPic from '../image/user_image.jpg';
 
@@ -51,10 +52,10 @@ class UserOptionModal extends Component{
                   <input type='checkbox' name="permission" value='2' className='PermissionChoice'/>
                   <span> การเพิ่มสมาชิกใหม่</span>
                 </div>
-                <div className="AreaOfButton">
-                  <button type="button" className="CancelButton">ยกเลิก</button>
-                  <button type="submit" className="SubmitButton">ตกลง</button>
-                </div>
+              </div>
+              <div className="AreaOfButton">
+                <button type="button" className="CancelButton" onClick={()=>this.props.userCancel()}>ยกเลิก</button>
+                <button type="submit" className="SubmitButton">ตกลง</button>
               </div>
             </div>
           : null
@@ -65,22 +66,10 @@ class UserOptionModal extends Component{
                 <span>การตั้งค่า</span>
               </div>
               <div style={{textAlign:'center'}}>
-              <AvatarEditor
-                ref={this.setEditorRef}
-                image={UserPic}
-                width={120}
-                height={120}
-                border={10}
-                borderRadius={200}
-                color={[0, 0, 0, 0.5]} // RGBA
-                scale={1.8}
-                rotate={0}
-                style={{border:'3px solid #373a47'}}
-              />
-              <div>
-                <button onClick={()=>this.onClickSave()}>SAVE</button>
-              </div>
-
+                <Fa name="upload" size="5x"/>
+                <div>
+                  <button onClick={()=>this.onClickSave()}>SAVE</button>
+                </div>
               </div>
             </div>
           : null

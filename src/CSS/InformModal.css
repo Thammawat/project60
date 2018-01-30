@@ -1,31 +1,30 @@
 .Modal {
   position: fixed;
   left:33vw;
-  top: 10vh;
+  top: 8vh;
   width:50vw;
   z-index:3;
   background:#EEEEEE;
   padding: 1em 2em;
   border-top: 4px solid #373a47;
   border-radius: 5px;
+  max-height: 80vh;
 }
 
 .ModalTopic {
   text-align: center;
-  width: 100%;
   font-weight: bold;
   font-size: 25px;
+  margin-bottom: 0.5em
 }
 
 .ModalBody {
-  width:100%;
-  padding: 1em 1em 0em 1em;
   font-size: 20px;
 }
 
 .HalfSide {
-  width:50%;
   display: inline-block;
+  padding:0em 0.25em;
 }
 
 button.SearchButton {
@@ -33,6 +32,7 @@ button.SearchButton {
   font-size: 20px;
   height:2.5em;
   width: 5em;
+  margin-right: 0.5em;
   background-color: #EEEEEE;
   color:#373a47;
   outline:none;
@@ -48,6 +48,70 @@ button.SearchButton:active{
 }
 
 .ButtonArea {
-  margin: 1.5em;
+  margin: 1em 0em;
   text-align: right;
+}
+
+.ResultArea {
+  margin:1em 0em;
+  font-size: 20px;
+}
+
+span.ModalHeading {
+  margin-right: 0.5em;
+}
+
+span.PageNumber {
+  margin:0em 0.25em;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+span.PageNumber:hover {
+  text-decoration: underline;
+}
+
+span.PageNumber:focus {
+  font-weight: bold;
+  font-size: 25px;
+}
+
+table.Result {
+  width:100%;
+  border-collapse: collapse;
+  border:1px solid #333333;
+}
+
+table.Result th {
+  color:#EEEEEE;
+  background-color:#373a47;
+  padding:0.5em;
+  border:1px solid #333333;
+
+}
+
+table.Result td {
+  text-align: center;
+  border: 1px solid #333333;
+}
+
+table.Result tr:nth-child(even){
+  background-color: white;
+}
+
+.UndoIcon {
+  float: left;
+  margin-top: 0.2em;
+}
+
+.PreviousPage {
+  margin-right: 0.25em;
+  position: relative;
+  top:5px;
+}
+
+.NextPage {
+  margin-left: 0.25em;
+  position: relative;
+  top:5px;
 }

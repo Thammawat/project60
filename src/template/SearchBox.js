@@ -67,9 +67,11 @@ class SearchBox extends Component{
           <input type="text" value={this.state.searchString} onChange={this.handleSearch} placeholder="type here..." className="SearchBox" onFocus={()=>this.onFocus()} onBlur={()=>this.autoComplete()}/>
           {this.state.searchString != '' && this.state.showItem === true
             ? <ul>
-                {libraries.map(function(i){
-                  return <li key={i.name} onMouseOver={()=>this.hoverItem(i.name)} onMouseOut={()=>this.onBlur()}>{i.name}</li>
-                }.bind(this))}
+                {libraries.map((i,index) => {
+                  return (
+                    <li key={i.name} onMouseOver={()=>this.hoverItem(i.name)} onMouseOut={()=>this.onBlur()}>{i.name}</li>
+                  )
+                })}
               </ul>
             : null
           }
