@@ -1,0 +1,205 @@
+.burger {
+  margin: 15px 20px;
+  position:fixed;
+  z-index:1;
+  color:#373a47;
+  cursor: pointer;
+}
+
+.backIcon {
+  margin: 9px 20px;
+  color:#373a47;
+  cursor: pointer;
+  float: left;
+}
+
+.sideBar {
+  width: 22vw;
+  height: 100vh;
+  position: fixed;
+  z-index: 3;
+  background-color: #373a47;
+  min-width: 200px;
+}
+
+.BgSideBar {
+  width:100%;
+  height: 100%;
+  position: fixed;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.SidebarCancelArea {
+  width:100%;
+  text-align:right;
+  color:#EEEEEE;
+}
+
+.CancelSidebarButton {
+  margin: 15px;
+}
+
+.UserIcon {
+  float: right;
+  margin: 9px 50px 20px 20px;
+  position:relative;
+  z-index:1;
+  color:#373a47;
+  cursor: pointer;
+}
+
+.LoginModal{
+  position: relative;
+  z-index:1;
+  left:90px;
+  top:50px;
+  width:200px;
+  padding:1em;
+  background: #F9F9F9;
+  float: right;
+  border-radius: 5px;
+  border:1px solid #A9A9A9;
+}
+
+span.Warning {
+  color:red;
+  font-size: 18px;
+}
+
+span.Welcome{
+  font-size: 18px;
+}
+
+input.FillForm {
+  padding:0em 0.5em;
+  width:91%;
+  margin:0.5em 0em;
+  outline:none;
+  font-size: 16px;
+}
+
+/* button.LoginButton {
+  width:50%;
+  height:3em;
+  font-size: 16px;
+  border-radius: 5px;
+  border:1px solid #A9A9A9;
+  outline:none;
+  height:40px;
+  margin-top: 0.5em;
+}
+
+button.LoginButton:active {
+  background: #373a47;
+  color: #EEEEEE;
+} */
+
+button.LogoutButton{
+  width:60%;
+  height:3em;
+  font-size: 16px;
+  border-radius: 5px;
+  border:1px solid #A9A9A9;
+  outline:none;
+  height:40px;
+  margin-top: 0.5em;
+}
+
+button.LogoutButton:active {
+  background: #373a47;
+  color: #EEEEEE;
+}
+
+img.userImage {
+  float: right;
+  margin: 9px 50px 20px 20px;
+  position:relative;
+  z-index:1;
+  width:35px;
+  height: 35px;
+  border:2px solid #373A47;
+  border-radius: 100%;
+}
+
+ul.UserOption{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+ul.UserOption li{
+  cursor: pointer;
+  padding: 0.1em 0.5em;
+}
+
+ul.UserOption li:hover{
+  background:  #373a47;
+  color:#F9F9F9;
+}
+
+.LeftOption{
+  width:60px;
+  display: inline-block;
+  border-top: 1px solid #A9A9A9;
+  border-left: 1px solid #A9A9A9;
+  border-bottom: 1px solid #A9A9A9;
+  background-color: #FFFFFF;
+  color:#373A47;
+  padding:0.2em 0.5em;
+  border-radius: 45% 0% 0% 45%;
+  cursor: pointer;
+  font-size: 20px;
+  text-align: right;
+}
+
+.OnLeftOption{
+  width:60px;
+  display: inline-block;
+  border-top: 1px solid #373A47;
+  border-left: 1px solid #373A47;
+  border-bottom: 1px solid #373A47;
+  background-color: #373A47;
+  color:#FFFFFF;
+  padding:0.2em 0.5em;
+  border-radius: 45% 0% 0% 45%;
+  cursor: pointer;
+  font-size: 20px;
+  text-align: right;
+}
+
+.RightOption{
+  width:60px;
+  display: inline-block;
+  border-top: 1px solid #A9A9A9;
+  border-right: 1px solid #A9A9A9;
+  border-bottom: 1px solid #A9A9A9;
+  background-color: #FFFFFF;
+  color:#373A47;
+  padding:0.2em 0.5em;
+  border-radius: 0% 45% 45% 0%;
+  cursor: pointer;
+  font-size: 20px;
+  text-align: left;
+}
+
+.OnRightOption{
+  width:60px;
+  display: inline-block;
+  border-top: 1px solid #373A47;
+  border-left: 1px solid #373A47;
+  border-bottom: 1px solid #373A47;
+  background-color: #373A47;
+  color:#FFFFFF;
+  padding:0.2em 0.5em;
+  border-radius: 0% 45% 45% 0%;
+  cursor: pointer;
+  font-size: 20px;
+  text-align: left;
+}
+
+.LoginList{
+  position: relative;
+  top:60vh;
+}

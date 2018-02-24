@@ -6,11 +6,19 @@
   transition: background 0.4s;
 }
 
-.SideBarList:hover{
+.SideBarList:hover {
   background: #272a37;
 }
 
 span.listName {
   margin:0em 1em;
   font-size: 20px;
+}
+
+.SideBarListOnFocus {
+  padding: 1em;
+  color:#272a37;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.4s;
 }

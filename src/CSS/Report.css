@@ -1,0 +1,91 @@
+.ReportArea {
+  margin-left: 22vw;
+  width:78vw;
+  min-height: 100vh;
+}
+
+.ReportTopic {
+  font-size: 32px;
+  font-weight: bold;
+  padding: 0.5em 1em;
+}
+
+.ReportBody {
+  margin: 0em 2em 2em 2em;
+  border-top: 5px solid #373a47;
+  border-radius: 5px;
+  background-color: #FFFFFF;
+  padding:1em;
+}
+
+.Date, .Route {
+  display: inline-block;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.ReportInputArea {
+  width:70%;
+  display: inline-block;
+}
+
+.ReportDownloadArea {
+  width:30%;
+  display: inline-block;
+  text-align: right;
+}
+
+.datePickerArea ,.SearchRoute {
+  display: inline;
+  margin:0em 1em;
+}
+
+input[type="date"].datePicker {
+  padding-left: 0.5em;
+  border-radius: 3px;
+  font-size: 18px;
+  outline:none;
+  border: 1px solid #A9A9A9;
+  width:180px;
+}
+
+button.DownloadReport {
+  padding:0.5em 1em;
+  color:#FFFFFF;
+  background-color: #373a47;
+  border: 2px solid #373a47;
+  border-radius: 10px;
+  outline: none;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+button.DownloadReport:active {
+  background-color:#FFFFFF;
+  color: #373a47;
+}
+
+.DownloadIcon {
+  margin-right:0.5em;
+}
+
+table.ReportResult {
+  margin-top:1em;
+  width:100%;
+  text-align: center;
+  font-size:20px;
+  border-collapse: collapse;
+}
+
+table.ReportResult th {
+  background-color: #373A47;
+  color: white;
+}
+
+table.ReportResult th, table.ReportResult td {
+  padding: 0.5em 0em;
+}
+
+table.ReportResult tr:nth-child(even) {
+  background-color: #f2f2f2;
+}

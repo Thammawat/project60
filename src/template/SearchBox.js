@@ -48,10 +48,6 @@ class SearchBox extends Component{
     })
   }
 
-  testFunc=()=>{
-      console.log("hello")
-  }
-
   render(){
     var libraries = this.props.item,
     searchString = this.state.searchString.trim().toLowerCase();
@@ -60,11 +56,10 @@ class SearchBox extends Component{
         return i.name.toLowerCase().match(searchString);
       });
     }
-    console.log(this.state.currentItem)
     return(
       <div style={{display:'inline-block'}}>
         <div className="DropdownSearchbox">
-          <input type="text" value={this.state.searchString} onChange={this.handleSearch} placeholder="type here..." className="SearchBox" onFocus={()=>this.onFocus()} onBlur={()=>this.autoComplete()}/>
+          <input type="text" value={this.state.searchString} onChange={this.handleSearch} placeholder="กรุณากรอกข้อมูล" className="SearchBox" onFocus={()=>this.onFocus()} onBlur={()=>this.autoComplete()}/>
           {this.state.searchString != '' && this.state.showItem === true
             ? <ul>
                 {libraries.map((i,index) => {

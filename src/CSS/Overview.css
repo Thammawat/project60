@@ -1,0 +1,64 @@
+.OverviewArea {
+  margin-left: 22vw;
+  width:78vw;
+  min-height: 100vh;
+}
+
+.OverviewTopic {
+  font-size: 32px;
+  font-weight: bold;
+  padding: 0.5em 1em;
+}
+
+.OverviewBody {
+  margin: 0em 2em 2em 2em;
+  border-top: 5px solid #373a47;
+  border-radius: 5px;
+  background-color: #FFFFFF;
+  padding:1em;
+}
+
+.StaticBox {
+  display: inline-block;
+  width: 26%;
+  border: 1px solid #A9A9A9;
+  padding:1.16em;
+  border-radius: 5px;
+  margin: 0.5em 1em;
+}
+
+.LongStaticBox {
+  border: 1px solid #A9A9A9;
+  padding:1.16em;
+  border-radius: 5px;
+  margin:1em;
+}
+
+.StaticTopic {
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.LongStaticTopic {
+  font-size: 20px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.StaticResult {
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.StaticDescription {
+  font-size: 18px;
+}
+
+.MapArea {
+  position: relative;
+  padding-top:0.5em;
+  width:100%;
+  height: 300px;
+  text-align: center;
+}

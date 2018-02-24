@@ -1,0 +1,46 @@
+.DbBackground {
+  background-color: #EEEEEE;
+  overflow-x: hidden;
+}
+
+.DbSidebar {
+  width:22vw;
+  background-color: #373a47;
+  position: fixed;
+  height: 100vh;
+  color: #EEEEEE;
+  font-size: 18px;
+}
+
+.WelcomeSign {
+  padding:1.5em 0em;
+}
+
+.DbList {
+  padding: 1em;
+  background-color: inherit;
+  cursor: pointer;
+  transition: background-color 0.4s;
+}
+
+.DbList:hover  {
+  background-color: #222532;
+}
+
+.DbListOnFocus {
+  padding: 1em;
+  cursor: pointer;
+  background-color: #111420;
+}
+
+.DbIcon {
+}
+
+.DbListName {
+  margin-left: 0.5em;
+}
+
+.LogoutArea {
+  position: relative;
+  top:30vh;
+}

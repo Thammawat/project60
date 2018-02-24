@@ -1,0 +1,100 @@
+.MemberModalOutside {
+  width:100vw;
+  height: 100vh;
+  position: fixed;
+  z-index: 98;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.MemberModalInside {
+  position: fixed;
+  z-index:99;
+  top:10vh;
+  left:32.5vw;
+  border-top: 5px solid #373a47;
+  border-radius: 5px;
+  width:35vw;
+  background-color: #EEEEEE;
+  padding:1em;
+}
+
+.MemberModalTopic {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+
+.MemberModalBody {
+  font-size: 20px;
+}
+
+.HalfModal {
+  width:46.2%;
+  display: inline-block;
+}
+
+input.MemberModalInput {
+  width:95%;
+  font-size: 18px;
+  padding: 0em 0.5em;
+  outline:none;
+  border-radius: 3px;
+  border: 1px solid #A9A9A9;
+  margin:0.25em 0em;
+}
+
+input[type='radio'].PermissionChoice {
+  position: relative;
+  top:2px;
+  height: 1.2em;
+  width: 1.2em;
+  cursor: pointer;
+}
+
+.PermissionTopic {
+  margin:0.25em 0em;
+}
+
+.PermissionList {
+  margin-left: 25%;
+}
+
+.MemberModalbButtonArea {
+  margin-top: 0.75em;
+  padding-top: 1em;
+  border-top: 3px solid #373a47;
+}
+
+.MemberModalCancelArea {
+  width:50%;
+  text-align: left;
+  display: inline-block;
+}
+
+.MemberModalSubmitArea {
+  width:50%;
+  text-align: right;
+  display: inline-block;
+}
+
+button.MemberModalSubmitButton ,button.MemberModalCancelButton {
+  font-size: 20px;
+  border-radius: 10px;
+  padding:0.3em 1em;
+  outline: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button.MemberModalSubmitButton ,button.MemberModalCancelButton:active {
+  border: 2px solid #373a47;
+  background-color: #373a47;
+  color:#EEEEEE;
+}
+
+button.MemberModalSubmitButton:active ,button.MemberModalCancelButton {
+  border: 2px solid #373a47;
+  background-color: #EEEEEE;
+  color:#373a47;
+}
