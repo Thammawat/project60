@@ -12,7 +12,8 @@ class Modal extends Component {
     this.state = {
       resultPage: null,
       currentPage: 1,
-      showSearch: false,
+      showSearch1: false,
+      showSearch2: false,
     };
   }
 
@@ -22,23 +23,41 @@ class Modal extends Component {
     })
   }
 
-  showSearchToggle=()=>{
+  showSearchToggle=(data)=>{
     var tempPage = []
     for(var temp = 0;temp < Math.ceil(this.props.results.length/10);temp++){
       tempPage[temp] = temp+1;
     }
     this.setState({
       resultPage: tempPage,
-      showSearch: true,
     })
+    if(data === '1'){
+      this.setState({
+        showSearch1: true,
+      })
+    }
+    if(data === '2'){
+      this.setState({
+        showSearch2: true,
+      })
+    }
   }
 
-  closeSearchToggle=()=>{
+  closeSearchToggle=(data)=>{
     this.setState({
       resultPage: null,
-      showSearch: false,
       currentPage: 1,
     })
+    if(data === '1'){
+      this.setState({
+        showSearch1: false,
+      })
+    }
+    if(data === '2'){
+      this.setState({
+        showSearch2: false,
+      })
+    }
   }
 
   toPreviousPage=()=>{
@@ -62,7 +81,7 @@ class Modal extends Component {
       <div>
         {this.props.select === '1'
           ? <div className="LargeModal animated fadeInUp">
-              {this.state.showSearch===false
+              {this.state.showSearch1 === false
                 ? <div>
                     <div className="ModalTopic">
                       <span>ค้นหาเส้นทาง</span>
@@ -77,13 +96,13 @@ class Modal extends Component {
                         <SearchBox item={this.props.libraries}/>
                       </div>
                       <div className="ButtonArea">
-                          <button className="SearchButton" onClick={()=>this.showSearchToggle()}>ค้นหา</button>
+                          <button className="SearchButton" onClick={()=>this.showSearchToggle(this.props.select)}>ค้นหา</button>
                       </div>
                     </div>
                   </div>
                 : <div>
                     <div className="ModalTopic">
-                      <Fa icon="arrow-left" className="UndoIcon" onClick={()=>this.closeSearchToggle()}/>
+                      <Fa icon="arrow-left" className="UndoIcon" onClick={()=>this.closeSearchToggle(this.props.select)}/>
                       <span>ผลการค้นหา</span>
                     </div>
                     <div className="ResultArea">
@@ -99,12 +118,12 @@ class Modal extends Component {
                           {this.props.results.map((eachResult, index) => {
                             if(Math.ceil((index+1)/10) === this.state.currentPage){
                               return(
-                                  <tr key={eachResult.bus}>
-                                    <td>{eachResult.bus}</td>
-                                    <td>{eachResult.path}</td>
-                                    <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>{this.props.Polyline(),this.props.toMapDetail()}}/></td>
-                                  </tr>
-                                )
+                                <tr key={eachResult.bus}>
+                                  <td>{eachResult.bus}</td>
+                                  <td>{eachResult.path}</td>
+                                  <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>{this.props.Polyline(),this.props.toMapDetail(eachResult.bus, eachResult.path)}}/></td>
+                                </tr>
+                              )
                             }
                           })}
                         </tbody>
@@ -141,19 +160,78 @@ class Modal extends Component {
           : null
         }
         {this.props.select === '2'
-          ? <div className="Modal animated fadeInUp">
-              <div className="ModalTopic">
-                <span>สายรถเมย์</span>
-              </div>
-              <div className="ModalBody">
-                <div className="HalfSide">
-                  <span className="ModalHeading">สายรถเมย์</span>
-                  <SearchBox item={this.props.libraries} />
+          ? <div>
+            {this.state.showSearch2 === false
+              ? <div className="Modal animated fadeInUp">
+                  <div className="ModalTopic">
+                    <span>สายรถเมย์</span>
+                  </div>
+                  <div className="ModalBody">
+                    <div className="HalfSide">
+                      <span className="ModalHeading">สายรถเมย์</span>
+                      <SearchBox item={this.props.libraries} />
+                    </div>
+                    <div className="ButtonArea">
+                      <button className="SearchButton" onClick={()=>this.showSearchToggle(this.props.select)}>ค้นหา</button>
+                    </div>
+                  </div>
                 </div>
-                <div className="ButtonArea">
-                  <button className="SearchButton">ค้นหา</button>
+              : <div className="LargeModal animated fadeInUp">
+                  <div className="ModalTopic">
+                    <Fa icon="arrow-left" className="UndoIcon" onClick={()=>this.closeSearchToggle(this.props.select)}/>
+                    <span>ผลการค้นหา</span>
+                  </div>
+                  <div className="ResultArea">
+                    <table className="Result">
+                      <thead>
+                        <tr>
+                          <th>สายรถเมย์</th>
+                          <th>เส้นทางการเดินรถ</th>
+                          <th>ดูเส้นทาง</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {this.props.results.map((eachResult, index) => {
+                          if(Math.ceil((index+1)/10) === this.state.currentPage){
+                            return(
+                                <tr key={eachResult.bus}>
+                                  <td>{eachResult.bus}</td>
+                                  <td>{eachResult.path}</td>
+                                  <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>{this.props.Polyline(),this.props.toMapDetail(eachResult.bus, eachResult.path)}}/></td>
+                                </tr>
+                              )
+                          }
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                  {this.state.resultPage.length > 1
+                    ? <div style={{textAlign:'center'}}>
+                        {this.state.currentPage != 1
+                          ? <Fa icon='caret-left' size='2x' className="PreviousPage" onClick={()=>this.toPreviousPage()}/>
+                          : null
+                        }
+                        {this.state.resultPage.map((eachPage) => {
+                          if(eachPage === this.state.currentPage){
+                            return(
+                              <span className="InPage" onClick={()=>this.changePage(eachPage)} id="">{eachPage}</span>
+                            )
+                          }
+                          else{
+                            return(
+                              <span className="PageNumber" onClick={()=>this.changePage(eachPage)}>{eachPage}</span>
+                            )
+                          }
+                        })}
+                        {this.state.currentPage != this.state.resultPage.length
+                          ? <Fa icon='caret-right' size='2x' className="NextPage" onClick={()=>this.toNextPage()}/>
+                          : null
+                        }
+                      </div>
+                    : null
+                  }
                 </div>
-              </div>
+            }
             </div>
           : null
         }

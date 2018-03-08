@@ -7,8 +7,11 @@ import Fa from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free-solid';
 import SideBarList from './ListInSideBar.js';
 import InformModal from './InformModal.js';
+import TestBusPath from '../JSON/roadmapbuses.json';
+import axios from 'axios';
 
 let polyline = null;
+let borderPolyline = null;
 
 class App extends Component {
   constructor(){
@@ -23,6 +26,11 @@ class App extends Component {
       option: null,
       showRoute: false,
       arrivals: true,
+      selectedBus: null,
+      selectedPath: null,
+      pathDetail: null,
+      currentBus: 0,
+      busInputData: null,
       libraries:[
         {name:'ลาดกระบัง'},
         {name:'สนามบินสุวรรณภูมิ'},
@@ -38,59 +46,76 @@ class App extends Component {
         {bus:'1',path:'เคหะร่มเกล้า - สะพานพุทธ'},
         {bus:'2',path:'สวนสยาม - สาทร'},
         {bus:'3',path:'ท่าอิฐ - อนุเสาวรีย์ชัยสมรภูมิ'},
-        {bus:'4',path:'เคหะร่มเกล้า - สะพานพุทธ'},
-        {bus:'5',path:'สวนสยาม - สาทร'},
-        {bus:'6',path:'ท่าอิฐ - อนุเสาวรีย์ชัยสมรภูมิ'},
-        {bus:'7',path:'เคหะร่มเกล้า - สะพานพุทธ'},
-        {bus:'8',path:'สวนสยาม - สาทร'},
-        {bus:'9',path:'ท่าอิฐ - อนุเสาวรีย์ชัยสมรภูมิ'},
-        {bus:'10',path:'เคหะร่มเกล้า - สะพานพุทธ'},
-        {bus:'11',path:'สวนสยาม - สาทร'},
-        {bus:'12',path:'ท่าอิฐ - อนุเสาวรีย์ชัยสมรภูมิ'},
-        {bus:'13',path:'เคหะร่มเกล้า - สะพานพุทธ'},
-        {bus:'14',path:'สวนสยาม - สาทร'},
-        {bus:'15',path:'ท่าอิฐ - อนุเสาวรีย์ชัยสมรภูมิ'},
-        {bus:'16',path:'เคหะร่มเกล้า - สะพานพุทธ'},
-        {bus:'17',path:'สวนสยาม - สาทร'},
-        {bus:'18',path:'ท่าอิฐ - อนุเสาวรีย์ชัยสมรภูมิ'},
-        {bus:'19',path:'เคหะร่มเกล้า - สะพานพุทธ'},
-        {bus:'20',path:'สวนสยาม - สาทร'},
-        {bus:'21',path:'ท่าอิฐ - อนุเสาวรีย์ชัยสมรภูมิ'},
-        {bus:'22',path:'เคหะร่มเกล้า - สะพานพุทธ'},
-        {bus:'23',path:'สวนสยาม - สาทร'},
-        {bus:'24',path:'ท่าอิฐ - อนุเสาวรีย์ชัยสมรภูมิ'},
-        {bus:'25',path:'เคหะร่มเกล้า - สะพานพุทธ'},
-        {bus:'26',path:'สวนสยาม - สาทร'},
-        {bus:'27',path:'ท่าอิฐ - อนุเสาวรีย์ชัยสมรภูมิ'},
-        {bus:'28',path:'เคหะร่มเกล้า - สะพานพุทธ'},
-        {bus:'29',path:'สวนสยาม - สาทร'},
-        {bus:'30',path:'ท่าอิฐ - อนุเสาวรีย์ชัยสมรภูมิ'},
-        {bus:'31',path:'เคหะร่มเกล้า - สะพานพุทธ'},
-        {bus:'32',path:'สวนสยาม - สาทร'},
-        {bus:'33',path:'ท่าอิฐ - อนุเสาวรีย์ชัยสมรภูมิ'},
-        {bus:'34',path:'เคหะร่มเกล้า - สะพานพุทธ'},
-        {bus:'35',path:'สวนสยาม - สาทร'},
-        {bus:'36',path:'ท่าอิฐ - อนุเสาวรีย์ชัยสมรภูมิ'},
       ],
     };
   }
 
+  componentDidMount=()=>{
+    axios.get('http://localhost:3000/currentBusPosition')
+      .then(data => {
+        this.setState({
+          busInputData: data.data.busData
+        })
+    })
+    var test = [];
+    for(var i = 0; i < TestBusPath.roadMap.length; i++){
+      var tempObj = {lat:TestBusPath.roadMap[i].lat, lng:TestBusPath.roadMap[i].lng}
+      test.push(tempObj)
+    }
+    this.setState({
+      pathDetail: test,
+    })
+    this.inputInterval = setInterval(this.updateBusPosition,60000)
+  }
+
+  componentWillUnmount=()=>{
+    clearInterval(this.inputInterval)
+    clearInterval(this.busPositonInterval)
+  }
+
+  updateBusPosition=()=>{
+    axios.get('http://localhost:3000/currentBusPosition')
+      .then(data => {
+        this.setState({
+          busInputData: data.data.busData
+        })
+      })
+  }
+
+  RenderBus=()=>{
+    var GenBus = null
+    if(this.state.showRoute === true){
+      GenBus = this.state.busInputData.map((eachBus) => {
+        return(
+          <div className="BusPosition" lat={eachBus.lat} lng={eachBus.lon}>
+            <Fa icon="bus" size="lg" />
+          </div>
+        )
+      })
+    }
+    return GenBus;
+  }
+
   Polyline=()=>{
-    var test = [
-      { lat: 13.8438629475451, lng: 100.49841741567 },
-      { lat: 13.8450056400873, lng: 100.566327685348 }
-    ];
     polyline = new this.state.maps.Polyline({
-      path: test,
-      strokeColor: "blue",
-      strokeOpacity: 1.0,
+      path: this.state.pathDetail,
+      strokeColor: "#373A47",
+      strokeOpacity: 1,
       strokeWeight: 4,
     });
+    borderPolyline = new this.state.maps.Polyline({
+      path: this.state.pathDetail,
+      strokeColor: "#111420",
+      strokeOpacity: 1,
+      strokeWeight: 8,
+    });
     polyline.setMap(this.state.map)
+    // borderPolyline.setMap(this.state.map)
   }
 
   removePolyline=()=>{
     polyline.setMap(null)
+    borderPolyline.setMap(null)
   }
 
   changeBurgerToggle=()=>{
@@ -118,17 +143,22 @@ class App extends Component {
     })
   }
 
-  toMapDetail=()=>{
+  toMapDetail=(bus, path)=>{
+    var centerTemp = {lat:(TestBusPath.roadMap[Math.floor(TestBusPath.roadMap.length/2)].lat + 0.1), lng:TestBusPath.roadMap[Math.floor(TestBusPath.roadMap.length/2)].lng};
     this.setState({
       showRoute: true,
-      zoom:13,
+      center: centerTemp,
+      selectedBus: bus,
+      selectedPath: path,
     })
   }
 
   toInformModal=()=>{
     this.setState({
       showRoute:false,
-      zoom:11,
+      center:{lat: 13.75, lng: 100.517},
+      selectedBus: null,
+      selectedPath: null,
     })
   }
 
@@ -152,7 +182,9 @@ class App extends Component {
           zoom={this.state.zoom}
           style={{ zIndex:-1 }}
           onGoogleApiLoaded={({ map, maps }) => { this.setState({ map: map, maps: maps, mapLoaded: true }) }}
-        />
+        >
+          {this.RenderBus()}
+        </GoogleMapReact>
         {this.state.showRoute === false
           ? <div>
               {this.state.burgerToggle === false
@@ -178,28 +210,64 @@ class App extends Component {
                   </div>
               }
             </div>
-          : <div style={{position:'fixed',zIndex:'1',width:'98vw'}}>
+          : <div style={{position:'fixed',zIndex:'1',width:'97vw'}}>
               <Fa icon="arrow-left" size="2x" className="backIcon" onClick={()=>{this.toInformModal(),this.removePolyline()}}/>
               <div style={{textAlign:'center',marginTop:'1em'}}>
-                {this.state.arrivals === true
-                  ? <div>
-                      <div className="OnLeftOption">
-                        <span>ขาเข้า</span>
+                <div className="descriptionBox">
+                  <div className="showBusLine">
+                    <span>{this.state.selectedBus}</span>
+                  </div>
+                  <div className="showPath">
+                    <span>{this.state.selectedPath}</span>
+                  </div>
+                  {this.state.arrivals === true
+                    ? <div>
+                        <div className="OnLeftOption">
+                          <span>ขาเข้า</span>
+                        </div>
+                        <div className="RightOption" onClick={()=>this.toDepartures()}>
+                          <span>ขาออก</span>
+                        </div>
                       </div>
-                      <div className="RightOption" onClick={()=>this.toDepartures()}>
-                        <span>ขาออก</span>
+                    : <div>
+                        <div className="LeftOption" onClick={()=>this.toArrivals()}>
+                          <span>ขาเข้า</span>
+                        </div>
+                        <div className="OnRightOption">
+                          <span>ขาออก</span>
+                        </div>
                       </div>
-                    </div>
-                  : <div>
-                      <div className="LeftOption" onClick={()=>this.toArrivals()}>
-                        <span>ขาเข้า</span>
-                      </div>
-                      <div className="OnRightOption">
-                        <span>ขาออก</span>
-                      </div>
-                    </div>
-                }
+                  }
+                </div>
               </div>
+              {/*<div className="center">
+                <div className="descriptionBox">
+                  <div className="showBusLine">
+                    <span>{this.state.results[1].bus}</span>
+                  </div>
+                  <div className="showPath">
+                    <span>{this.state.results[1].path}</span>
+                  </div>
+                  {this.state.arrivals === true
+                    ? <div>
+                        <div className="OnLeftOption">
+                          <span>ขาเข้า</span>
+                        </div>
+                        <div className="RightOption" onClick={()=>this.toDepartures()}>
+                          <span>ขาออก</span>
+                        </div>
+                      </div>
+                    : <div>
+                        <div className="LeftOption" onClick={()=>this.toArrivals()}>
+                          <span>ขาเข้า</span>
+                        </div>
+                        <div className="OnRightOption">
+                          <span>ขาออก</span>
+                        </div>
+                      </div>
+                  }
+                </div>
+              </div>*/}
             </div>
         }
         {/*{this.state.loginToken === false

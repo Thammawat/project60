@@ -1,12 +1,17 @@
 import path from 'path';
 import fs from 'fs';
 import Express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser'
 import Webpack from 'webpack';
 import WebpackConfig from '../webpack.config';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
 import WebPackHotMiddleware from 'webpack-hot-middleware';
 
 const app = Express();
+app.use(cors())
+app.use(bodyParser.json())
+app.use(require('./controllers'))
 const webpackCompiler = Webpack(WebpackConfig);
 app.use(WebpackDevMiddleware(webpackCompiler, {
   publicPath: WebpackConfig.output.publicPath,
@@ -29,7 +34,6 @@ app.get('/:filename.wasm', (req, res) => {
     res.send(data);
   });
 });
-app.use('/dist', Express.static('dist', {maxAge: '1d'}));
 
 app.use((req, res) => {
   const htmlString = `<!DOCTYPE html>
@@ -41,7 +45,7 @@ app.use((req, res) => {
             <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry"></script>
           </head>
           <body>
-            <div id="root"></div>         
+            <div id="root"></div>
             <script src="/dist/utils.js"></script>
             <script src="/dist/bundle.js"></script>
           </body>
@@ -50,6 +54,7 @@ app.use((req, res) => {
   res.end(htmlString);
 });
 
-app.listen(3000, () => {
+var port = process.env.PORT || 3000;
+app.listen(port, () => {
   console.log(`Started wasm-playground...`);
 });

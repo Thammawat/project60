@@ -18,7 +18,7 @@ class App extends Component {
       <Switch>
         <Redirect from="/dashboard/:id" to="/dashboard" />
         <Route path="/dashboard" component={Dashboard} />
-        <Route exact path="/" component={Home} />
+        <Route exact path="/" component={Home}/>
         <Redirect to={{ pathname:'/' }} />
       </Switch>
     )
