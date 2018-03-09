@@ -84,8 +84,12 @@ class Home extends Component {
 
   RenderBus=()=>{
     var GenBus = null
+    var Result = null
     if(this.state.showRoute === true){
-      GenBus = this.state.busInputData.map((eachBus) => {
+      GenBus = this.state.busInputData.filter((eachCurrentBus) => (
+        eachCurrentBus.path === this.state.selectedBus
+      ))
+      Result = GenBus.map((eachBus) => {
         return(
           <div className="BusPosition" lat={eachBus.lat} lng={eachBus.lon}>
             <Fa icon="bus" size="lg" />
@@ -93,7 +97,7 @@ class Home extends Component {
         )
       })
     }
-    return GenBus;
+    return Result;
   }
 
   Polyline=(data)=>{
