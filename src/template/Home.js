@@ -65,7 +65,7 @@ class App extends Component {
     this.setState({
       pathDetail: test,
     })
-    this.inputInterval = setInterval(this.updateBusPosition,60000)
+    this.inputInterval = setInterval(this.updateBusPosition,6000)
   }
 
   componentWillUnmount=()=>{
