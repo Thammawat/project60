@@ -5,6 +5,7 @@ import '../animate.css';
 import SearchBox from './SearchBox.js';
 import Fa from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free-solid';
+import { connect } from 'react-redux';
 
 class Modal extends Component {
   constructor(){
@@ -14,7 +15,22 @@ class Modal extends Component {
       currentPage: 1,
       showSearch1: false,
       showSearch2: false,
+      busName: null,
+      selectedBusName: null,
     };
+  }
+
+  componentWillMount=()=>{
+    var temp = []
+    for(var index = 0; index < this.props.roadData.length; index++){
+      temp.push({
+        name:this.props.roadData[index].name,
+        fullname: this.props.roadData[index].fullname.slice(3),
+      })
+    }
+    this.setState({
+      busName: temp,
+    })
   }
 
   changePage=(data)=>{
@@ -76,7 +92,18 @@ class Modal extends Component {
     }
   }
 
+  getSelectedValue=(data)=>{
+    for(var index = 0; index < this.state.busName.length;index++){
+      if(this.state.busName[index].name === data){
+        this.setState({
+          selectedBusName: index,
+        })
+      }
+    }
+  }
+
   render(){
+    console.log(this.state.selectedBusName)
     return(
       <div>
         {this.props.select === '1'
@@ -161,77 +188,20 @@ class Modal extends Component {
         }
         {this.props.select === '2'
           ? <div>
-            {this.state.showSearch2 === false
-              ? <div className="Modal animated fadeInUp">
-                  <div className="ModalTopic">
-                    <span>สายรถเมย์</span>
+              <div className="Modal animated fadeInUp">
+                <div className="ModalTopic">
+                  <span>สายรถเมย์</span>
+                </div>
+                <div className="ModalBody">
+                  <div className="HalfSide">
+                    <span className="ModalHeading">สายรถเมย์</span>
+                    <SearchBox item={this.state.busName} getSelectedValue={this.getSelectedValue}/>
                   </div>
-                  <div className="ModalBody">
-                    <div className="HalfSide">
-                      <span className="ModalHeading">สายรถเมย์</span>
-                      <SearchBox item={this.props.libraries} />
-                    </div>
-                    <div className="ButtonArea">
-                      <button className="SearchButton" onClick={()=>this.showSearchToggle(this.props.select)}>ค้นหา</button>
-                    </div>
+                  <div className="ButtonArea">
+                    <button className="SearchButton" onClick={()=>{this.props.toMapDetail(this.state.busName[this.state.selectedBusName].name, this.state.busName[this.state.selectedBusName].fullname,this.props.roadData[this.state.selectedBusName].centerPath),this.props.Polyline(this.props.roadData[this.state.selectedBusName])}}>ค้นหา</button>
                   </div>
                 </div>
-              : <div className="LargeModal animated fadeInUp">
-                  <div className="ModalTopic">
-                    <Fa icon="arrow-left" className="UndoIcon" onClick={()=>this.closeSearchToggle(this.props.select)}/>
-                    <span>ผลการค้นหา</span>
-                  </div>
-                  <div className="ResultArea">
-                    <table className="Result">
-                      <thead>
-                        <tr>
-                          <th>สายรถเมย์</th>
-                          <th>เส้นทางการเดินรถ</th>
-                          <th>ดูเส้นทาง</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {this.props.results.map((eachResult, index) => {
-                          if(Math.ceil((index+1)/10) === this.state.currentPage){
-                            return(
-                                <tr key={eachResult.bus}>
-                                  <td>{eachResult.bus}</td>
-                                  <td>{eachResult.path}</td>
-                                  <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>{this.props.Polyline(),this.props.toMapDetail(eachResult.bus, eachResult.path)}}/></td>
-                                </tr>
-                              )
-                          }
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                  {this.state.resultPage.length > 1
-                    ? <div style={{textAlign:'center'}}>
-                        {this.state.currentPage != 1
-                          ? <Fa icon='caret-left' size='2x' className="PreviousPage" onClick={()=>this.toPreviousPage()}/>
-                          : null
-                        }
-                        {this.state.resultPage.map((eachPage) => {
-                          if(eachPage === this.state.currentPage){
-                            return(
-                              <span className="InPage" onClick={()=>this.changePage(eachPage)} id="">{eachPage}</span>
-                            )
-                          }
-                          else{
-                            return(
-                              <span className="PageNumber" onClick={()=>this.changePage(eachPage)}>{eachPage}</span>
-                            )
-                          }
-                        })}
-                        {this.state.currentPage != this.state.resultPage.length
-                          ? <Fa icon='caret-right' size='2x' className="NextPage" onClick={()=>this.toNextPage()}/>
-                          : null
-                        }
-                      </div>
-                    : null
-                  }
-                </div>
-            }
+              </div>
             </div>
           : null
         }
@@ -266,4 +236,8 @@ class Modal extends Component {
   }
 }
 
-export default Modal;
+const mapStateToProps = (state) => ({
+  roadData: state.RoadData.roadData
+});
+
+export default connect(mapStateToProps, null)(Modal);

@@ -23,6 +23,7 @@ class SearchBox extends Component{
       this.setState({
         searchString: this.state.currentItem,
       })
+      this.props.getSelectedValue(this.state.currentItem)
     }
     this.setState({
       showItem:false,

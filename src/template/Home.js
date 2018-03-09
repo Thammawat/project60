@@ -7,13 +7,15 @@ import Fa from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free-solid';
 import SideBarList from './ListInSideBar.js';
 import InformModal from './InformModal.js';
-import TestBusPath from '../JSON/roadmapbuses.json';
 import axios from 'axios';
+import { connect } from 'react-redux';
+
+import {InitialData} from '../reducers/roadData/roadDataAction.js';
 
 let polyline = null;
 let borderPolyline = null;
 
-class App extends Component {
+class Home extends Component {
   constructor(){
     super();
     this.state = {
@@ -28,9 +30,9 @@ class App extends Component {
       arrivals: true,
       selectedBus: null,
       selectedPath: null,
-      pathDetail: null,
       currentBus: 0,
       busInputData: null,
+      roadData: null,
       libraries:[
         {name:'ลาดกระบัง'},
         {name:'สนามบินสุวรรณภูมิ'},
@@ -50,20 +52,18 @@ class App extends Component {
     };
   }
 
+  componentWillMount=()=>{
+    axios.get('http://localhost:3000/roadData').then(data => {
+      this.props.InitialData(data.data.roadData)
+    })
+  }
+
   componentDidMount=()=>{
     axios.get('http://localhost:3000/currentBusPosition')
       .then(data => {
         this.setState({
           busInputData: data.data.busData
         })
-    })
-    var test = [];
-    for(var i = 0; i < TestBusPath.roadMap.length; i++){
-      var tempObj = {lat:TestBusPath.roadMap[i].lat, lng:TestBusPath.roadMap[i].lng}
-      test.push(tempObj)
-    }
-    this.setState({
-      pathDetail: test,
     })
     this.inputInterval = setInterval(this.updateBusPosition,6000)
   }
@@ -96,21 +96,19 @@ class App extends Component {
     return GenBus;
   }
 
-  Polyline=()=>{
+  Polyline=(data)=>{
+    var test = [];
+    for(var i = 0; i < data.roadMapBus.roadMap.length; i++){
+      var tempObj = {lat:data.roadMapBus.roadMap[i].lat, lng:data.roadMapBus.roadMap[i].lng}
+      test.push(tempObj)
+    }
     polyline = new this.state.maps.Polyline({
-      path: this.state.pathDetail,
+      path: test,
       strokeColor: "#373A47",
       strokeOpacity: 1,
       strokeWeight: 4,
     });
-    borderPolyline = new this.state.maps.Polyline({
-      path: this.state.pathDetail,
-      strokeColor: "#111420",
-      strokeOpacity: 1,
-      strokeWeight: 8,
-    });
     polyline.setMap(this.state.map)
-    // borderPolyline.setMap(this.state.map)
   }
 
   removePolyline=()=>{
@@ -143,8 +141,8 @@ class App extends Component {
     })
   }
 
-  toMapDetail=(bus, path)=>{
-    var centerTemp = {lat:(TestBusPath.roadMap[Math.floor(TestBusPath.roadMap.length/2)].lat + 0.1), lng:TestBusPath.roadMap[Math.floor(TestBusPath.roadMap.length/2)].lng};
+  toMapDetail=(bus, path, center)=>{
+    var centerTemp = {lat:center.lat, lng:center.lng};
     this.setState({
       showRoute: true,
       center: centerTemp,
@@ -205,7 +203,9 @@ class App extends Component {
                     </div>
                     <InformModal select={this.state.option} toMapDetail={this.toMapDetail} libraries={this.state.libraries}
                     results={this.state.results}
-                    Polyline={this.Polyline}/>
+                    Polyline={this.Polyline}
+                    getSelectedPath={this.getSelectedPath}
+                    />
                     <div className="BgSideBar" onClick={()=>this.changeBurgerToggle()} />
                   </div>
               }
@@ -325,4 +325,12 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => ({
+  InitialData: (data) => dispatch(InitialData(data)),
+});
+
+const mapStateToProps = (state) => ({
+  roadData: state.RoadData.roadData
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

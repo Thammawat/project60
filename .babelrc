@@ -11,6 +11,7 @@
       "stage-0"
     ],
     "plugins": [
+      "transform-es3-property-literals",
       "transform-decorators-legacy",
       "array-includes",
       "transform-async-to-generator"

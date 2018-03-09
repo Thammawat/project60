@@ -18,6 +18,17 @@ module.exports = {
       publicPath: '/dist/'
     },
     module: {
+        loaders: [
+          {
+            test: /\.js$/,
+            loader: 'babel',
+            exclude: /node_modules/,
+            query: {
+                 presets: ['react', 'es2015']
+            },
+            include: __dirname
+          }
+        ],
         rules: [
             {
                 test: /\.(js|jsx)$/,
@@ -35,6 +46,11 @@ module.exports = {
             {
                 test: /\.(otf|eot|woff|woff2|ttf|svg)(\?.+)?$/,
                 loader: 'file-loader?name=fonts/[name].[ext]',
+            },
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                exclude: /node_modules/
             },
         ],
     },
