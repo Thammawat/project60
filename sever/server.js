@@ -7,6 +7,19 @@ import Webpack from 'webpack';
 import WebpackConfig from '../webpack.config';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
 import WebPackHotMiddleware from 'webpack-hot-middleware';
+import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
+const ObjectId = Schema.ObjectId;
+import bluebird from 'bluebird';
+
+
+Promise.promisifyAll(mongoose);
+mongoose.Promise = Promise;
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/basedir');
+mongoose.connection.on('error', function (err) {
+  console.log('Mongoose default connection error: ' + err);
+});
+
 
 const app = Express();
 app.use(cors())
