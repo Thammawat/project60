@@ -7,10 +7,7 @@ router.get('/',function(req,res){
   .then(data =>{
     var busData= data.data
     busData = Object.values(busData)
-    var busFromUrl = busData.filter(element =>(
-      element.path === "39"
-    ))
-    res.json({'busData' : busFromUrl})
+    res.json({'busData' : busData})
   })
 })
 
