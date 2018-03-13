@@ -42,7 +42,7 @@ router.post('/login', function (req, res) {
     User.findOne({ username: req.body.data.username }, function (err, user) {
         if (err) throw err;
         if (!user) {
-            res.json({ 'result': 'Invalid username or password' })
+            res.json({ 'result': 'fail' })
         } else {
             if (bcrypt.compareSync(req.body.data.password, user.password)) {
                 bcrypt.genSalt(10, function (err, salt) {
@@ -50,12 +50,12 @@ router.post('/login', function (req, res) {
                     // hash the password using our new salt
                     bcrypt.hash(user.username, salt, function (err, hash) {
                         if (err) return next(err);
-                        res.json({ 'result': hash })
+                        res.json({ 'result':'success','token': hash })
                     });
                 });
             }
             else {
-                res.json({ 'result': 'Invalid username or password' })
+                res.json({ 'result': 'fail' })
             }
         }
     });
