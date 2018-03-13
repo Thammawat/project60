@@ -1,5 +1,5 @@
 const initialState = {
-  roadData: null,
+  roadData: "Hello",
 };
 
 const roadDataReducer = (state = initialState, action) => {

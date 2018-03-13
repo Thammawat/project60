@@ -97,7 +97,7 @@ class Dashboard extends Component {
   }
 
   render(){
-    console.log(this.props.userData)
+    console.log(this.props.roadData)
     return(
       <div className="DbBackground">
         {this.state.LogoutToggle === true
@@ -181,6 +181,7 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => ({
   userData: state.UserData,
+  roadData: state.RoadData.roadData,
 });
 
 export default connect(mapStateToProps, null)(Dashboard);

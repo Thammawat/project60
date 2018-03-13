@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import '../CSS/InformModal.css';
 import '../animate.css';
 import SearchBox from './SearchBox.js';
@@ -13,8 +14,8 @@ import { getUserData } from '../reducers/userData/userDataAction.js'
 
 
 class Modal extends Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props)
     this.state = {
       resultPage: null,
       currentPage: 1,
@@ -122,7 +123,7 @@ class Modal extends Component {
   }
 
   checkLogin=e=>{
-    console.log("here")
+    this.context.router.history.push('/dashboard');
     e.preventDefault()
     axios.post("http://localhost:3000/user/login",
     {
@@ -135,11 +136,10 @@ class Modal extends Component {
       }
     })
     .then(data => {
+      this.context.router.replaceWith('/dashboard')
       if(data.data.result === "success"){
         this.props.getUserData(data.data.userData, data.data.token)
-        if(this.props.userData !== null){
-          window.location.href = "/dashboard"
-        }
+        this.context.router.replaceWith('/dashboard')
       }
     })
     .catch(error => {
@@ -148,6 +148,7 @@ class Modal extends Component {
   }
 
   render(){
+    console.log(this.props.roadData)
     return(
       <div>
         {this.props.select === '1'
@@ -278,6 +279,10 @@ class Modal extends Component {
       </div>
     );
   }
+}
+
+Modal.contextTypes = {
+  router: PropTypes.object.isRequired
 }
 
 const mapDispatchToProps = (dispatch) => ({
