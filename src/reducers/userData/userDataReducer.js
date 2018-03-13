@@ -1,11 +1,12 @@
 const initialState = {
-  roadData: null,
+  userData: null,
+  userToken: null,
 };
 
 const roadDataReducer = (state = initialState, action) => {
   switch(action.type) {
-    case 'INITIAL_DATA':
-      return Object.assign({}, state, { roadData: action.roadData });
+    case 'GET_USER_DATA':
+      return Object.assign({}, state, { userData: action.userData, userToken: action.userToken });
     default:
       return state;
   }

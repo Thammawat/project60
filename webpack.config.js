@@ -18,17 +18,6 @@ module.exports = {
       publicPath: '/dist/'
     },
     module: {
-        loaders: [
-          {
-            test: /\.js$/,
-            loader: 'babel',
-            exclude: /node_modules/,
-            query: {
-                 presets: ['react', 'es2015']
-            },
-            include: __dirname
-          }
-        ],
         rules: [
             {
                 test: /\.(js|jsx)$/,

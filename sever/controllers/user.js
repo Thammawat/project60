@@ -39,6 +39,7 @@ router.post('/addUser', function (req, res) {
 })
 
 router.post('/login', function (req, res) {
+    console.log(req.body)
     User.findOne({ username: req.body.data.username }, function (err, user) {
         if (err) throw err;
         if (!user) {
@@ -48,7 +49,7 @@ router.post('/login', function (req, res) {
                 bcrypt.genSalt(10, function (err, salt) {
                     if (err) return next(err);
                     // hash the password using our new salt
-                    bcrypt.hash(user.username, salt, function (err, hash) {
+                    bcrypt.hash(user.username, salt, null, function (err, hash) {
                         if (err) return next(err);
                         res.json({ 'result':'success','token': hash })
                     });

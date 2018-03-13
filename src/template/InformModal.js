@@ -5,7 +5,12 @@ import '../animate.css';
 import SearchBox from './SearchBox.js';
 import Fa from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free-solid';
+import axios from 'axios';
 import { connect } from 'react-redux';
+
+import { getUserData } from '../reducers/userData/userDataAction.js'
+
+
 
 class Modal extends Component {
   constructor(){
@@ -17,6 +22,8 @@ class Modal extends Component {
       showSearch2: false,
       busName: null,
       selectedBusName: null,
+      username:null,
+      password:null,
     };
   }
 
@@ -102,8 +109,44 @@ class Modal extends Component {
     }
   }
 
+  handleUsername=(e)=>{
+    this.setState({
+      username: e.target.value,
+    })
+  }
+
+  handlePassword=(e)=>{
+    this.setState({
+      password: e.target.value,
+    })
+  }
+
+  checkLogin=e=>{
+    console.log("here")
+    e.preventDefault()
+    axios.post("http://localhost:3000/user/login",
+    {
+      data: { username: this.state.username ,password: this.state.password }
+    },
+    {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Control-Type': 'application/json'
+      }
+    })
+    .then(data => {
+      console.log(data.data)
+      if(data.data.result === "success"){
+        this.props.getUserData(data.data.userData, data.data.token)
+        window.location.assign("/dashboard")
+      }
+    })
+    .catch(error => {
+      console.log(error)
+    });
+  }
+
   render(){
-    console.log(this.state.selectedBusName)
     return(
       <div>
         {this.props.select === '1'
@@ -206,29 +249,29 @@ class Modal extends Component {
           : null
         }
         {this.props.select === '0'
-          ? <div className="Modal animated fadeInUp">
-              <div className="ModalTopic" style={{marginBottom:'0.1em'}}>
-                <span>เข้าสู่ระบบ</span>
-              </div>
-              <div className="ModalWarning">
-                <span>**เฉพาะเจ้าหน้าที่เท่านั้น**</span>
-              </div>
-              <div className="ModalBody">
-                <div>
-                  <span className="ModalHeading">ชื่อบัญชี</span>
-                  <input type='text' placeholder='กรุณากรอกชื่อบัญชี' className="LoginBox"/>
+          ? <form onSubmit={this.checkLogin}>
+              <div className="Modal animated fadeInUp">
+                <div className="ModalTopic" style={{marginBottom:'0.1em'}}>
+                  <span>เข้าสู่ระบบ</span>
                 </div>
-                <div>
-                  <span className="ModalHeading">รหัสผ่าน</span>
-                  <input type='password' placeholder='กรุณากรอกรหัสผ่าน' className="LoginBox"/>
+                <div className="ModalWarning">
+                  <span>**เฉพาะเจ้าหน้าที่เท่านั้น**</span>
                 </div>
-                <div className="LoginArea">
-                  <Link to="dashboard">
-                    <button className="LoginButton">เข้าสู่ระบบ</button>
-                  </Link>
+                <div className="ModalBody">
+                  <div>
+                    <span className="ModalHeading">ชื่อบัญชี</span>
+                    <input type='text' value={this.state.username} onChange={this.handleUsername} placeholder='กรุณากรอกชื่อบัญชี' className="LoginBox" required/>
+                  </div>
+                  <div>
+                    <span className="ModalHeading">รหัสผ่าน</span>
+                    <input type='password' value={this.state.password} onChange={this.handlePassword} placeholder='กรุณากรอกรหัสผ่าน' className="LoginBox" required/>
+                  </div>
+                  <div className="LoginArea">
+                    <button type="submit" value="submit" className="LoginButton">เข้าสู่ระบบ</button>
+                  </div>
                 </div>
               </div>
-            </div>
+            </form>
           : null
         }
       </div>
@@ -236,8 +279,12 @@ class Modal extends Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) => ({
+  getUserData: (data, token) => dispath(getUserData(data, token))
+});
+
 const mapStateToProps = (state) => ({
   roadData: state.RoadData.roadData
 });
 
-export default connect(mapStateToProps, null)(Modal);
+export default connect(mapStateToProps, mapDispatchToProps)(Modal);
