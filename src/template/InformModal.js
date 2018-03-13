@@ -123,7 +123,6 @@ class Modal extends Component {
   }
 
   checkLogin=e=>{
-    this.context.router.history.push('/dashboard');
     e.preventDefault()
     axios.post("http://localhost:3000/user/login",
     {
@@ -136,10 +135,9 @@ class Modal extends Component {
       }
     })
     .then(data => {
-      this.context.router.replaceWith('/dashboard')
       if(data.data.result === "success"){
         this.props.getUserData(data.data.userData, data.data.token)
-        this.context.router.replaceWith('/dashboard')
+        this.context.router.history.push('/dashboard');
       }
     })
     .catch(error => {
@@ -148,7 +146,6 @@ class Modal extends Component {
   }
 
   render(){
-    console.log(this.props.roadData)
     return(
       <div>
         {this.props.select === '1'
