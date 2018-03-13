@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../model/user')
-const bcrypt = require('bcrypt-node');
+const bcrypt = require('bcrypt-nodejs');
 
 router.get('/', function (req, res) {
     User.find({}, function (err, data) {
@@ -12,10 +12,10 @@ router.get('/', function (req, res) {
 
 router.get('/addAdmin', function (req, res) {
     var newUser = User({
-        firstname: 'eqweqwewqewqew',
-        lastname: 'wqeqwewqewqe',
-        username: 'DISSSSSVAA',
-        password: 'qwewqewqewqeqwew',
+        firstname: 'admin',
+        lastname: 'admin',
+        username: 'admin',
+        password: 'admin',
         status: 'admin',
     });
     newUser.save(function (err) {
