@@ -18,7 +18,7 @@ module.exports = {
       publicPath: '/dist/'
     },
     module: {
-        rules: [
+        loaders: [
             {
                 test: /\.(js|jsx)$/,
                 include: [path.resolve(__dirname, './src'), path.resolve(__dirname)],
@@ -35,11 +35,6 @@ module.exports = {
             {
                 test: /\.(otf|eot|woff|woff2|ttf|svg)(\?.+)?$/,
                 loader: 'file-loader?name=fonts/[name].[ext]',
-            },
-            {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                exclude: /node_modules/
             },
         ],
     },

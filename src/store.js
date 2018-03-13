@@ -1,10 +1,7 @@
-/**
- * Main store function
- */
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-
-import rootReducer from './reducers/reducers.js';
+import DevTools from './DevTools';
+import rootReducer from './reducers/reducers';
 
 export function configureStore(initialState = {}) {
   // Middleware and store enhancers
@@ -12,15 +9,18 @@ export function configureStore(initialState = {}) {
     applyMiddleware(thunk),
   ];
 
-  
+  if (process.env.CLIENT && process.env.NODE_ENV === 'development') {
+    // Enable DevTools only when rendering on client and during development.
+    enhancers.push(window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument());
+  }
 
   const store = createStore(rootReducer, initialState, compose(...enhancers));
 
   // For hot reloading reducers
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers
-    module.hot.accept('./reducers/reducers.js', () => {
-      const nextReducer = require('./reducers/reducers.js').default; // eslint-disable-line global-require
+    module.hot.accept('./reducers', () => {
+      const nextReducer = require('./reducers').default; // eslint-disable-line global-require
       store.replaceReducer(nextReducer);
     });
   }
