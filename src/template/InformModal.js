@@ -135,10 +135,11 @@ class Modal extends Component {
       }
     })
     .then(data => {
-      console.log(data.data)
       if(data.data.result === "success"){
         this.props.getUserData(data.data.userData, data.data.token)
-        window.location.assign("/dashboard")
+        if(this.props.userData !== null){
+          window.location.href = "/dashboard"
+        }
       }
     })
     .catch(error => {
@@ -280,11 +281,12 @@ class Modal extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  getUserData: (data, token) => dispath(getUserData(data, token))
+  getUserData: (data, token) => dispatch(getUserData(data, token))
 });
 
 const mapStateToProps = (state) => ({
-  roadData: state.RoadData.roadData
+  roadData: state.RoadData.roadData,
+  userData: state.UserData.userData
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Modal);

@@ -7,6 +7,7 @@ import Report from './Report.js';
 import Member from './Member.js';
 import Setting from './Setting.js';
 import LogoutConfirmModal from './LogoutConfirmModal.js';
+import { connect } from 'react-redux';
 
 class Dashboard extends Component {
   constructor(){
@@ -95,7 +96,8 @@ class Dashboard extends Component {
     })
   }
 
-  render() {
+  render(){
+    console.log(this.props.userData)
     return(
       <div className="DbBackground">
         {this.state.LogoutToggle === true
@@ -108,7 +110,7 @@ class Dashboard extends Component {
               <span>ยินดีต้อนรับ</span>
             </div>
             <div className="center">
-              <span>คุณ{this.state.memberData[this.state.userIndex].firstname} {this.state.memberData[this.state.userIndex].lastname}</span>
+              <span>คุณ{this.props.userData.firstname} {this.props.userData.lastname}</span>
             </div>
           </div>
           {this.state.DbOption === 'home'
@@ -177,4 +179,8 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+const mapStateToProps = (state) => ({
+  userData: state.UserData,
+});
+
+export default connect(mapStateToProps, null)(Dashboard);
