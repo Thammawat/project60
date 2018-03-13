@@ -10,7 +10,7 @@ router.get('/', function (req, res) {
     })
 })
 
-router.get('/adduser', function (req, res) {
+router.get('/addAdmin', function (req, res) {
     var newUser = User({
         firstname: 'eqweqwewqewqew',
         lastname: 'wqeqwewqewqe',
@@ -24,10 +24,41 @@ router.get('/adduser', function (req, res) {
     });
 })
 
-router.post('/login', function (req, res) {
-    User.findOne({ Username: req.body.data.Username }, function (err, user) {
-        if (err) throw err;
-        res.json({ 'result': bcrypt.compareSync(req.body.data.Password, user.Password) })
+router.post('/addUser', function (req, res) {
+    var newUser = User({
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        username: req.body.username,
+        password: req.body.password,
+        status: req.body.status,
     });
+    newUser.save(function (err) {
+        if (err) throw err;
+        res.json({ 'result': 'User has Created' })
+    });
+})
+
+router.post('/login', function (req, res) {
+    User.findOne({ username: req.body.data.username }, function (err, user) {
+        if (err) throw err;
+        if (!user) {
+            res.json({ 'result': 'Invalid username or password' })
+        } else {
+            if (bcrypt.compareSync(req.body.data.password, user.password)) {
+                bcrypt.genSalt(10, function (err, salt) {
+                    if (err) return next(err);
+                    // hash the password using our new salt
+                    bcrypt.hash(user.username, salt, function (err, hash) {
+                        if (err) return next(err);
+                        res.json({ 'result': hash })
+                    });
+                });
+            }
+            else {
+                res.json({ 'result': 'Invalid username or password' })
+            }
+        }
+    });
+
 })
 module.exports = router
