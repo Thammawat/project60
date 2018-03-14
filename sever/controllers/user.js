@@ -4,6 +4,15 @@ const User = require('../model/user')
 const bcrypt = require('bcrypt-nodejs');
 
 router.get('/', function (req, res) {
+    // if (bcrypt.compareSync(req.body.data.adminUsername, req.body.data.token)) {
+    //     User.find({}, function (err, data) {
+    //         if (err) throw err;
+    //         res.json({ 'user': data })
+    //     })
+    // }
+    // else {
+    //     res.json({ 'result': 'fail' })
+    // }
     User.find({}, function (err, data) {
         if (err) throw err;
         res.json({ 'user': data })
@@ -29,11 +38,11 @@ router.post('/addUser', function (req, res) {
         User.findOne({ username: req.body.data.adminUsername }, function (err, user) {
             if (user.status === "admin" || user.status === "assistant") {
                 var newUser = User({
-                    firstname: req.body.firstname,
-                    lastname: req.body.lastname,
-                    username: req.body.username,
-                    password: req.body.password,
-                    status: req.body.status,
+                    firstname: req.body.data.firstname,
+                    lastname: req.body.data.lastname,
+                    username: req.body.data.username,
+                    password: req.body.data.password,
+                    status: req.body.data.status,
                 });
                 newUser.save(function (err) {
                     if (err) throw err;
