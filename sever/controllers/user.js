@@ -35,29 +35,29 @@ router.get('/addAdmin', function (req, res) {
 
 router.post('/addUser', function (req, res) {
     userData = []
-    if ((bcrypt.compareSync(req.body.data.adminUsername, req.body.data.token)) && req.body.data.adminStatus === "admin" ||  req.body.data.adminStatus === "assistant" ) {
-      User.find({username :  req.body.data.username }, function (err, data) {
-        if (err) throw err;
-        userData = data
-      })
-      .then(() =>{
-        if(userData.length === 0){
-          var newUser = User({
-              firstname: req.body.data.firstname,
-              lastname: req.body.data.lastname,
-              username: req.body.data.username,
-              password: req.body.data.password,
-              status: req.body.data.status,
-          });
-          newUser.save(function (err) {
-              if (err) throw err;
-              res.json({ 'result': 'User has Created' })
-          });
-        }
-        else {
-          res.json({ 'result': 'Username is same' })
-        }
-      })
+    if ((bcrypt.compareSync(req.body.data.adminUsername, req.body.data.token)) && req.body.data.adminStatus === "admin" || req.body.data.adminStatus === "assistant") {
+        User.find({ username: req.body.data.username }, function (err, data) {
+            if (err) throw err;
+            userData = data
+        })
+            .then(() => {
+                if (userData.length === 0) {
+                    var newUser = User({
+                        firstname: req.body.data.firstname,
+                        lastname: req.body.data.lastname,
+                        username: req.body.data.username,
+                        password: req.body.data.password,
+                        status: req.body.data.status,
+                    });
+                    newUser.save(function (err) {
+                        if (err) throw err;
+                        res.json({ 'result': 'User has Created' })
+                    });
+                }
+                else {
+                    res.json({ 'result': 'Username is same' })
+                }
+            })
     }
     else {
         res.json({ 'result': 'fail' })
@@ -65,19 +65,12 @@ router.post('/addUser', function (req, res) {
 })
 
 router.post('/removeUser', function (req, res) {
-    if (bcrypt.compareSync(req.body.data.adminUsername, req.body.data.token)) {
-        User.findOne({ username: req.body.data.adminUsername }, function (err, user) {
-            if (user.status === "admin" || user.status === "assistant") {
-                User.findOneAndRemove({ username: req.body.data.username }, function (err) {
-                    if (err) throw err;
-                    // we have deleted the user
-                    res.json({ 'result': 'User remove success' })
-                });
-            }
-            else {
-                res.json({ 'result': 'User role error' })
-            }
-        })
+    if ((bcrypt.compareSync(req.body.data.adminUsername, req.body.data.token)) && req.body.data.adminStatus === "admin" || req.body.data.adminStatus === "assistant") {
+        User.findOneAndRemove({ username: req.body.data.username }, function (err) {
+            if (err) throw err;
+            // we have deleted the user
+            res.json({ 'result': 'User remove success' })
+        });
     }
     else {
         res.json({ 'result': 'fail' })
