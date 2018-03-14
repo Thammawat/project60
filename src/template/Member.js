@@ -3,6 +3,8 @@ import '../CSS/Member.css';
 import Fa from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free-solid';
 import MemberModal from './MemberModal.js';
+import axios from 'axios';
+import { connect } from 'react-redux';
 
 class Member extends Component {
   constructor(){
@@ -12,7 +14,24 @@ class Member extends Component {
       MemberModalTopic: null,
       MemberModalToggle: false,
       currentMember: null,
+      allOfUser: [],
     };
+  }
+
+  componentWillMount=()=>{
+    axios.get("http://localhost:3000/user").then(data => {
+      this.setState({
+        allOfUser: data.data.user,
+      })
+    })
+  }
+
+  updateMember=()=>{
+    axios.get("http://localhost:3000/user").then(data => {
+      this.setState({
+        allOfUser: data.data.user,
+      })
+    })
   }
 
   changeMemberModalToggle=()=>{
@@ -33,7 +52,7 @@ class Member extends Component {
     return(
       <div>
         {this.state.MemberModalToggle === true
-          ? <MemberModal changeMemberModalToggle={this.changeMemberModalToggle} MemberModalTopic={this.state.MemberModalTopic} addMember={this.props.addMember} editMember={this.props.editMember} inputObject={this.state.inputObject} currentMember={this.state.currentMember}/>
+          ? <MemberModal changeMemberModalToggle={this.changeMemberModalToggle} MemberModalTopic={this.state.MemberModalTopic} updateMember={this.updateMember} inputObject={this.state.inputObject} currentMember={this.state.currentMember}/>
           : null
         }
         <div className="MemberArea">
@@ -45,7 +64,7 @@ class Member extends Component {
               <span className="MemberHeader">รายชื่อสมาชิก</span>
             </div>
             <div className="AddMemberButtonArea">
-              {this.props.userAccount.status === 'admin'
+              {this.props.userData.status === 'admin' || this.props.userData.status === 'assistant'
                 ? <button type="button" className="AddMemberButton" onClick={()=>{this.changeMemberModalToggle();this.setData("เพิ่มสมาชิกใหม่",{},null)}}>
                     <Fa icon="user-plus" size='lg' className="AddMemberIcon"/>
                     เพิ่มสมาชิกใหม่
@@ -53,7 +72,7 @@ class Member extends Component {
                 : null
               }
             </div>
-            {this.props.memberData.length === 0
+            {this.state.allOfUser.length === 0
               ? <div className="NoMemberArea">
                   <div>
                     <span>ขณะนี้ยังไม่มีสมาชิกอยู่ในระบบ</span>
@@ -64,7 +83,7 @@ class Member extends Component {
                 </div>
               : <div>
                   <table className="MemberResult">
-                    {this.props.userAccount.status === 'admin'
+                    {this.props.userData.status === 'admin' || this.props.userData.status === 'assistant'
                       ? <tr>
                           <th>ลำดับที่</th>
                           <th>ชื่อ</th>
@@ -80,8 +99,8 @@ class Member extends Component {
                           <th>สถานะ</th>
                         </tr>
                     }
-                    {this.props.memberData.map((eachMember, index) => {
-                      if(this.props.userAccount.status === 'admin'){
+                    {this.state.allOfUser.map((eachMember, index) => {
+                      if(this.props.userData.status === 'admin' || this.props.userData.status === 'assistant'){
                         return(
                           <tr key={index}>
                             <td>{index+1}</td>
@@ -90,6 +109,10 @@ class Member extends Component {
                             <td>
                               {eachMember.status === 'admin'
                                 ? <span>ผู้ดูแลระบบ</span>
+                                : null
+                              }
+                              {eachMember.status === 'assistant'
+                                ? <span>ผู้ช่วยผู้ดูแลระบบ</span>
                                 : null
                               }
                               {eachMember.status === 'member'
@@ -113,6 +136,10 @@ class Member extends Component {
                                 ? <span>ผู้ดูแลระบบ</span>
                                 : null
                               }
+                              {eachMember.status === 'assistant'
+                                ? <span>ผู้ช่วยผู้ดูแลระบบ</span>
+                                : null
+                              }
                               {eachMember.status === 'member'
                                 ? <span>สมาชิกทั่วไป</span>
                                 : null
@@ -132,4 +159,8 @@ class Member extends Component {
   }
 }
 
-export default Member;
+const mapStateToProps = (state) => ({
+  userData: state.UserData.userData
+});
+
+export default connect(mapStateToProps, null)(Member);

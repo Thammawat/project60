@@ -97,7 +97,6 @@ class Dashboard extends Component {
   }
 
   render(){
-    console.log(this.props.userData)
     return(
       <div className="DbBackground">
         {this.state.LogoutToggle === true
