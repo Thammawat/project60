@@ -3,6 +3,7 @@ import '../CSS/MemberModal.css';
 import axios from 'axios';
 import { connect } from 'react-redux';
 
+import { getCurrentMember } from '../reducers/userData/userDataAction.js';
 
 
 class MemberModal extends Component {
@@ -92,7 +93,7 @@ class MemberModal extends Component {
     .then(data => {
       console.log(data);
       if(data.data.result === "User has Created"){
-        this.props.updateMember()
+        this.props.changeMemberModalToggle()
       }
     })
     .catch(error => {
@@ -122,7 +123,7 @@ class MemberModal extends Component {
       console.log(data);
       if(data.data.result === "User edit success"){
         this.props.getCurrentMember(this.state.currentMember)
-        this.props.updateMember()
+        this.props.changeMemberModalToggle()
       }
     })
     .catch(error => {
@@ -227,7 +228,7 @@ class MemberModal extends Component {
   }
 }
 
-const mapDispatchToProps = (dispat) => ({
+const mapDispatchToProps = (dispatch) => ({
   getCurrentMember: (data) => dispatch(getCurrentMember(data)),
 });
 
@@ -237,4 +238,4 @@ const mapStateToProps = (state) => ({
   currentMember: state.UserData.currentMember,
 });
 
-export default connect(mapStateToProps, null)(MemberModal);
+export default connect(mapStateToProps, mapDispatchToProps)(MemberModal);

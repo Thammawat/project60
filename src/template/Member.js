@@ -26,15 +26,12 @@ class Member extends Component {
     })
   }
 
-  updateMember=()=>{
+  changeMemberModalToggle=()=>{
     axios.get("http://localhost:3000/user").then(data => {
       this.setState({
         allOfUser: data.data.user,
       })
     })
-  }
-
-  changeMemberModalToggle=()=>{
     this.setState({
       MemberModalToggle: !this.state.MemberModalToggle,
     })
@@ -71,6 +68,12 @@ class Member extends Component {
     this.props.getCurrentMember(data)
   }
 
+  setTopic=(data)=>{
+    this.setState({
+      MemberModalTopic: data,
+    })
+  }
+
   render() {
     return(
       <div>
@@ -88,7 +91,7 @@ class Member extends Component {
             </div>
             <div className="AddMemberButtonArea">
               {this.props.userData.status === 'admin' || this.props.userData.status === 'assistant'
-                ? <button type="button" className="AddMemberButton" onClick={()=>this.changeMemberModalToggle()}>
+                ? <button type="button" className="AddMemberButton" onClick={()=>{this.changeMemberModalToggle();this.setTopic("เพิ่มสมาชิกใหม่")}}>
                     <Fa icon="user-plus" size='lg' className="AddMemberIcon"/>
                     เพิ่มสมาชิกใหม่
                   </button>
@@ -143,7 +146,7 @@ class Member extends Component {
                                 : null
                               }
                             </td>
-                            <td><Fa icon="edit" size="lg" className="pointer mainColor" onClick={()=>{this.changeMemberModalToggle();this.selectedMember(eachMember)}}/></td>
+                            <td><Fa icon="edit" size="lg" className="pointer mainColor" onClick={()=>{this.changeMemberModalToggle();this.selectedMember(eachMember);this.setTopic("แก้ไขข้อมูลสมาชิก")}}/></td>
                             <td><Fa icon="trash-alt" size="lg" className="pointer mainColor" onClick={()=>this.deleteMember(eachMember.username)}/></td>
                           </tr>
                         )
