@@ -77,6 +77,19 @@ router.post('/removeUser', function (req, res) {
     }
 })
 
+router.post('/editUser', function (req, res) {
+    if ((bcrypt.compareSync(req.body.data.adminUsername, req.body.data.token)) && req.body.data.adminStatus === "admin" || req.body.data.adminStatus === "assistant") {
+        User.findOneAndUpdate({ username: req.body.data.username }, { status: userStatus }, function (err, bus) {
+            if (err) throw err;
+            //         if (err) throw err;
+            res.json({ 'result': 'User edit success' })
+        })
+    }
+    else {
+        res.json({ 'result': 'fail' })
+    }
+})
+
 router.post('/login', function (req, res) {
     console.log(req.body)
     User.findOne({ username: req.body.data.username }, function (err, user) {
