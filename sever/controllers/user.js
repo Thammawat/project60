@@ -34,7 +34,7 @@ router.get('/addAdmin', function (req, res) {
 })
 
 router.post('/addUser', function (req, res) {
-    userData = []
+    let userData = []
     if ((bcrypt.compareSync(req.body.data.adminUsername, req.body.data.token)) && req.body.data.adminStatus === "admin" || req.body.data.adminStatus === "assistant") {
         User.find({ username: req.body.data.username }, function (err, data) {
             if (err) throw err;
@@ -65,16 +65,16 @@ router.post('/addUser', function (req, res) {
 })
 
 router.post('/removeUser', function (req, res) {
-    if ((bcrypt.compareSync(req.body.data.adminUsername, req.body.data.token)) && req.body.data.adminStatus === "admin" || req.body.data.adminStatus === "assistant") {
-        User.findOneAndRemove({ username: req.body.data.username }, function (err) {
-            if (err) throw err;
-            // we have deleted the user
-            res.json({ 'result': 'User remove success' })
-        });
-    }
-    else {
-        res.json({ 'result': 'fail' })
-    }
+  if ((bcrypt.compareSync(req.body.data.adminUsername, req.body.data.token)) && req.body.data.adminStatus === "admin" || req.body.data.adminStatus === "assistant") {
+          User.findOneAndRemove({ username: req.body.data.username }, function (err) {
+              if (err) throw err;
+              // we have deleted the user
+              res.json({ 'result': 'User remove success' })
+          });
+      }
+      else {
+          res.json({ 'result': 'fail' })
+      }
 })
 
 router.post('/editStatusUser', function (req, res) {

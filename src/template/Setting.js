@@ -2,14 +2,22 @@ import React, {Component} from 'react';
 import '../CSS/Setting.css';
 import Fa from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free-solid';
+import { connect } from 'react-redux';
 
 class Setting extends Component {
   constructor(props){
     super(props);
     this.state = {
       onEdit: false,
-      userAccount: this.props.userAccount,
+      userAccount: {},
     };
+  }
+
+  componentWillMount=()=>{
+    console.log("work")
+    this.setState({
+      userAccount: this.props.userData,
+    })
   }
 
   ToggleEdit=()=>{
@@ -51,6 +59,7 @@ class Setting extends Component {
   }
 
   render() {
+    console.log(this.props.userData)
     return(
       <div className="SettingArea">
         <div className="SettingTopic">
@@ -138,4 +147,8 @@ class Setting extends Component {
   }
 }
 
-export default Setting;
+const mapStateToProps = (state) => ({
+  userData: state.UserData.userData
+});
+
+export default connect(mapStateToProps, null)(Setting);

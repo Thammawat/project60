@@ -15,7 +15,6 @@ class Dashboard extends Component {
     this.state = {
       DbOption:'home',
       LogoutToggle:false,
-      userIndex:1,
       RoutePath:[
         {name:'ต.113'},
         {name:'A1'},
@@ -26,36 +25,6 @@ class Dashboard extends Component {
         {name:'ต.13'},
         {name:'751'},
         {name:'B'},
-      ],
-      memberData: [
-        {
-          firstname:'ธรรมวัฒน์',
-          lastname:'บงการณ์',
-          username:'BBFL',
-          password:'1234',
-          status:'admin',
-        },
-        {
-          firstname:'ดรัณภพ',
-          lastname:'ปั้นมา',
-          username:'Nadood',
-          password:'4321',
-          status:'admin',
-        },
-        {
-          firstname:'ธนนภัช',
-          lastname:'สุโพธิ์',
-          username:'DKKs',
-          password:'5678',
-          status:'member',
-        },
-        {
-          firstname:'ทศพล',
-          lastname:'พรมเพชร์',
-          username:'Dewdroid',
-          password:'8765',
-          status:'member',
-        }
       ],
     };
   }
@@ -69,30 +38,6 @@ class Dashboard extends Component {
   changeLogoutToggle=()=>{
     this.setState({
       LogoutToggle: !this.state.LogoutToggle,
-    })
-  }
-
-  addMember=(data)=>{
-    var newMember = this.state.memberData.slice()
-    newMember.push(data)
-    this.setState({
-      memberData: newMember,
-    })
-  }
-
-  deleteMember=(index)=>{
-    var newMember = this.state.memberData
-    newMember.splice(index, 1)
-    this.setState({
-      memberData: newMember,
-    })
-  }
-
-  editMember=(index, data)=>{
-    var newMember = this.state.memberData
-    newMember.splice(index, 1, data)
-    this.setState({
-      memberData: newMember,
     })
   }
 
@@ -166,11 +111,11 @@ class Dashboard extends Component {
           : null
         }
         {this.state.DbOption === 'member'
-          ? <Member memberData={this.state.memberData} addMember={this.addMember} deleteMember={this.deleteMember} editMember={this.editMember} userAccount={this.state.memberData[this.state.userIndex]}/>
+          ? <Member />
           : null
         }
         {this.state.DbOption === 'setting'
-          ? <Setting userAccount={this.state.memberData[this.state.userIndex]} />
+          ? <Setting />
           : null
         }
       </div>

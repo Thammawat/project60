@@ -6,14 +6,14 @@ import MemberModal from './MemberModal.js';
 import axios from 'axios';
 import { connect } from 'react-redux';
 
+import { getCurrentMember } from '../reducers/userData/userDataAction.js';
+
 class Member extends Component {
   constructor(){
     super();
     this.state = {
-      inputObject:null,
       MemberModalTopic: null,
       MemberModalToggle: false,
-      currentMember: null,
       allOfUser: [],
     };
   }
@@ -40,19 +40,42 @@ class Member extends Component {
     })
   }
 
-  setData=(topic ,object ,index)=>{
-    this.setState({
-      MemberModalTopic: topic,
-      inputObject: object,
-      currentMember: index,
+  deleteMember=(data)=>{
+    console.log(data)
+    axios.post("http://localhost:3000/user/removeUser",
+    {
+      data: {
+        adminUsername: this.props.userData.username,
+        adminStatus: this.props.userData.status,
+        token: this.props.userToken,
+        username: data,
+      }
+    },
+    {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Control-Type': 'application/json'
+      }
     })
+    .then(data => {
+      if(data.data.result === "User remove success"){
+        this.updateMember()
+      }
+    })
+    .catch(error =>{
+      console.log(error)
+    });
+  }
+
+  selectedMember=(data)=>{
+    this.props.getCurrentMember(data)
   }
 
   render() {
     return(
       <div>
         {this.state.MemberModalToggle === true
-          ? <MemberModal changeMemberModalToggle={this.changeMemberModalToggle} MemberModalTopic={this.state.MemberModalTopic} updateMember={this.updateMember} inputObject={this.state.inputObject} currentMember={this.state.currentMember}/>
+          ? <MemberModal changeMemberModalToggle={this.changeMemberModalToggle} MemberModalTopic={this.state.MemberModalTopic} updateMember={this.updateMember} />
           : null
         }
         <div className="MemberArea">
@@ -65,7 +88,7 @@ class Member extends Component {
             </div>
             <div className="AddMemberButtonArea">
               {this.props.userData.status === 'admin' || this.props.userData.status === 'assistant'
-                ? <button type="button" className="AddMemberButton" onClick={()=>{this.changeMemberModalToggle();this.setData("เพิ่มสมาชิกใหม่",{},null)}}>
+                ? <button type="button" className="AddMemberButton" onClick={()=>this.changeMemberModalToggle()}>
                     <Fa icon="user-plus" size='lg' className="AddMemberIcon"/>
                     เพิ่มสมาชิกใหม่
                   </button>
@@ -120,8 +143,8 @@ class Member extends Component {
                                 : null
                               }
                             </td>
-                            <td><Fa icon="edit" size="lg" className="pointer mainColor" onClick={()=>{this.changeMemberModalToggle();this.setData("แก้ไขข้อมูลสมาชิก",eachMember,index)}}/></td>
-                            <td><Fa icon="trash-alt" size="lg" className="pointer mainColor" onClick={()=>this.props.deleteMember(index)}/></td>
+                            <td><Fa icon="edit" size="lg" className="pointer mainColor" onClick={()=>{this.changeMemberModalToggle();this.selectedMember(eachMember)}}/></td>
+                            <td><Fa icon="trash-alt" size="lg" className="pointer mainColor" onClick={()=>this.deleteMember(eachMember.username)}/></td>
                           </tr>
                         )
                       }
@@ -159,8 +182,13 @@ class Member extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  userData: state.UserData.userData
+const mapDispatchToProps = (dispatch) => ({
+  getCurrentMember: (data) => dispatch(getCurrentMember(data))
 });
 
-export default connect(mapStateToProps, null)(Member);
+const mapStateToProps = (state) => ({
+  userData: state.UserData.userData,
+  userToken: state.UserData.userToken
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Member);
