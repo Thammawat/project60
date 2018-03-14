@@ -43,7 +43,7 @@ router.post('/findRoadPath', function (req, res) {
                     element.nameTH === req.body.data.busStop1
                 ))
                 const endPath = roadBusStop[j].busStop.filter(element => (
-                    element.nameTH ===  req.body.data.busStop2
+                    element.nameTH === req.body.data.busStop2
                 ))
                 if (startPath.length !== 0) {
                     start.push({ pathStart: 0, path: roadBusStop[j].busRoad })
@@ -70,10 +70,10 @@ router.post('/findRoadPath', function (req, res) {
                     element.busRoad === path[0]
                 ))
                 var pathStart = busStopPath[0].busStop.filter(element => (
-                    element.nameTH ===  req.body.data.busStop1
+                    element.nameTH === req.body.data.busStop1
                 ))
                 var pathEnd = busStopPath[0].busStop.filter(element => (
-                    element.nameTH ===  req.body.data.busStop2
+                    element.nameTH === req.body.data.busStop2
                 ))
                 var startSequence = pathStart[0].sequence
                 var endSequence = pathEnd[0].sequence
@@ -186,7 +186,7 @@ router.post('/findRoadPath', function (req, res) {
                         element.busRoad === answer.roadPath[0]
                     ))
                     var resultStart = busStopPathStart[0].busStop.filter(element => (
-                        element.nameTH ===  req.body.data.busStop1
+                        element.nameTH === req.body.data.busStop1
                     ))
                     var startSequence = resultStart[0].sequence
                     var contractWithStart = contractStart[0].contract.filter(element => (
@@ -202,7 +202,7 @@ router.post('/findRoadPath', function (req, res) {
                         element.busRoad === answer.roadPath[answer.roadPath.length - 1]
                     ))
                     var resultEnd = busStopPathEnd[0].busStop.filter(element => (
-                        element.nameTH ===  req.body.data.busStop2
+                        element.nameTH === req.body.data.busStop2
                     ))
                     var endSequence = resultEnd[0].sequence
                     var contractWithEnd = contractEnd[0].contract.filter(element => (
@@ -216,18 +216,150 @@ router.post('/findRoadPath', function (req, res) {
                         finalRoadPath.push(answer)
                     }
                 })
-                if(finalRoadPath.length !== 0)
-                {
+                if (finalRoadPath.length !== 0) {
                     res.json({ 'roadPath': finalRoadPath })
                 }
-                else{
-                    res.json({ 'result': 'error on data'})
+                else {
+                    res.json({ 'result': 'error on data' })
                 }
             }
         })
     })
 })
 
+
+
+router.post('/roadPathWay', function (req, res) {
+    //roadPathWay = (startPlace, endPlace, roadPath) 
+    let roadBusStop = []
+    let roadMapBus = []
+    let contactPath = []
+    let roadWay = []
+    let inItPath = null
+    RoadBusStop.find({}, function (err, data) {
+        roadBusStop = data
+    }).then(() => {
+        RoadMapBus.find({}, function (err, data) {
+            roadMapBus = data
+        }).then(() => {
+            BusContract.find({}, function (err, data) {
+                contactPath = data
+            }).then(() => {
+                var i = 0;
+                if (req.body.data.roadPath.length === 1) {
+                    var busStopPath = roadBusStop.filter(element => (
+                        element.busRoad === req.body.data.roadPath[0]
+                    ))
+                    var pathStart = busStopPath[0].busStop.filter(element => (
+                        element.nameTH === req.body.data.startPlace
+                    ))
+                    var pathEnd = busStopPath[0].busStop.filter(element => (
+                        element.nameTH === req.body.data.endPlace
+                    ))
+                    var startSequence = pathStart[0].sequence
+                    var endSequence = pathEnd[0].sequence
+                    var roadMap = roadMapBus.filter(element => (
+                        element.busRoad === req.body.data.roadPath[0]
+                    ))
+                    var path = roadMap[0].roadMap.filter(element => (
+                        element.index >= busStopPath[0].busStop[startSequence].roadIndex &&
+                        element.index <= busStopPath[0].busStop[endSequence].roadIndex
+                    ))
+                    roadWay = roadWay.concat(path)
+                    console.log(path)
+                }
+                else {
+                    for (var i = 0; i < req.body.data.roadPath.length; i++) {
+                        if (i === 0) {
+                            var busStopPath = roadBusStop.filter(element => (
+                                element.busRoad === req.body.data.roadPath[0]
+                            ))
+                            var contract = contactPath.filter(element => (
+                                element.busRoad === req.body.data.roadPath[0]
+                            ))
+                            var result = busStopPath[0].busStop.filter(element => (
+                                element.nameTH === req.body.data.startPlace
+                            ))
+                            var startSequence = result[0].sequence
+                            //console.log(startSequence)
+                            var contractWith = contract[0].contract.filter(element => (
+                                element.contractWith === req.body.data.roadPath[1]
+                            ))
+                            var resultPath = contractWith[0].path.filter(element => (
+                                element.sequence > startSequence
+                            ))
+                            var endSequence = resultPath[0].sequence
+                            inItPath = resultPath[0].contractAt
+                            //console.log(endSequence)
+                            var roadMap = roadMapBus.filter(element => (
+                                element.busRoad === req.body.data.roadPath[0]
+                            ))
+                            // console.log(busStopPath[0].busStop[startSequence])
+                            // console.log(busStopPath[0].busStop[endSequence])
+                            var path = roadMap[0].roadMap.filter(element => (
+                                element.index >= busStopPath[0].busStop[startSequence].roadIndex &&
+                                element.index <= busStopPath[0].busStop[endSequence].roadIndex
+                            ))
+                            //console.log(roadMap[0].roadMap)
+                            roadWay = roadWay.concat(path)
+                            console.log(path)
+                        }
+                        else if (i === req.body.data.roadPath.length - 1) {
+                            var busStopPath = roadBusStop.filter(element => (
+                                element.busRoad === req.body.data.roadPath[i]
+                            ))
+                            var result = busStopPath[0].busStop.filter(element => (
+                                element.nameTH === req.body.data.endPlace
+                            ))
+                            var endSequence = result[0].sequence
+                            var roadMap = roadMapBus.filter(element => (
+                                element.busRoad === req.body.data.roadPath[i]
+                            ))
+                            var path = roadMap[0].roadMap.filter(element => (
+                                element.index >= busStopPath[0].busStop[inItPath].roadIndex &&
+                                element.index <= busStopPath[0].busStop[endSequence].roadIndex
+                            ))
+                            console.log("-------------------")
+                            console.log(path)
+                            console.log(inItPath)
+                            roadWay = roadWay.concat(path)
+                        }
+                        else {
+                            var busStopPath = roadBusStop.filter(element => (
+                                element.busRoad === req.body.data.roadPath[i]
+                            ))
+                            var contract = contactPath.filter(element => (
+                                element.busRoad === req.body.data.roadPath[i]
+                            ))
+                            var contractWith = contract[0].contract.filter(element => (
+                                element.contractWith === req.body.data.roadPath[i + 1]
+                            ))
+                            var startSequence = inItPath
+                            var resultPath = contractWith[0].path.filter(element => (
+                                element.sequence > inItPath
+                            ))
+                            var endSequence = resultPath[0].sequence
+                            inItPath = resultPath[0].contractAt
+                            var roadMap = roadMapBus.filter(element => (
+                                element.busRoad === req.body.data.roadPath[i]
+                            ))
+                            var path = roadMap[0].roadMap.filter(element => (
+                                element.index >= busStopPath[0].busStop[startSequence].roadIndex &&
+                                element.index <= busStopPath[0].busStop[endSequence].roadIndex
+                            ))
+                            console.log("xxxxxxxxxxxx")
+                            console.log(path)
+                            roadWay = roadWay.concat(path)
+                        }
+                    }
+                }
+                console.log('roadWayyy')
+                console.log(roadWay)
+                res.json({ 'roadWay': roadWay })
+            })
+        })
+    })
+})
 
 
 module.exports = router
