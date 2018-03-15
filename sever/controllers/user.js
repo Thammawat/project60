@@ -103,10 +103,10 @@ router.post('/editPasswordUser', function (req, res) {
                             if (err) throw err;
                             user.firstname = user.firstname
                             user.lastname = user.lastname
-                            user.username = user.lastname
+                            user.username = user.username
                             user.password = hash
                             user.status = user.status
-                            res.json({ 'result': 'User change password success','userData': user })
+                            res.json({ 'result': 'User change password success','userData': user , 'token': hash})
                         })
                     });
                 });
