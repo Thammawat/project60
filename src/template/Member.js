@@ -3,6 +3,7 @@ import '../CSS/Member.css';
 import Fa from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free-solid';
 import MemberModal from './MemberModal.js';
+import ConfirmModal from './ConfirmModal.js';
 import axios from 'axios';
 import { connect } from 'react-redux';
 
@@ -14,11 +15,20 @@ class Member extends Component {
     this.state = {
       MemberModalTopic: null,
       MemberModalToggle: false,
+      ConfirmModalToggle: false,
       allOfUser: [],
     };
   }
 
   componentWillMount=()=>{
+    axios.get("http://localhost:3000/user").then(data => {
+      this.setState({
+        allOfUser: data.data.user,
+      })
+    })
+  }
+
+  updateMember=()=>{
     axios.get("http://localhost:3000/user").then(data => {
       this.setState({
         allOfUser: data.data.user,
@@ -38,31 +48,22 @@ class Member extends Component {
     })
   }
 
-  deleteMember=(data)=>{
-    console.log(data)
-    axios.post("http://localhost:3000/user/removeUser",
-    {
-      data: {
-        adminUsername: this.props.userData.username,
-        adminStatus: this.props.userData.status,
-        token: this.props.userToken,
-        username: data,
-      }
-    },
-    {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Control-Type': 'application/json'
-      }
+  toConfirmModal=()=>{
+    axios.get("http://localhost:3000/user").then(data => {
+      this.setState({
+        allOfUser: data.data.user,
+      })
     })
-    .then(data => {
-      if(data.data.result === "User remove success"){
-        this.updateMember()
-      }
+    this.setState({
+      MemberModalToggle: false,
+      ConfirmModalToggle: true,
     })
-    .catch(error =>{
-      console.log(error)
-    });
+  }
+
+  closeConfirmModal=()=>{
+    this.setState({
+      ConfirmModalToggle: false,
+    })
   }
 
   selectedMember=(data)=>{
@@ -78,8 +79,12 @@ class Member extends Component {
   render() {
     return(
       <div>
+        {this.state.ConfirmModalToggle === true
+          ? <ConfirmModal closeConfirmModal={this.closeConfirmModal} MemberModalTopic={this.state.MemberModalTopic}/>
+          : null
+        }
         {this.state.MemberModalToggle === true
-          ? <MemberModal changeMemberModalToggle={this.changeMemberModalToggle} MemberModalTopic={this.state.MemberModalTopic} updateMember={this.updateMember} />
+          ? <MemberModal changeMemberModalToggle={this.changeMemberModalToggle} MemberModalTopic={this.state.MemberModalTopic} updateMember={this.updateMember} toConfirmModal={this.toConfirmModal}/>
           : null
         }
         <div className="MemberArea">
@@ -147,8 +152,18 @@ class Member extends Component {
                                 : null
                               }
                             </td>
-                            <td><Fa icon="edit" size="lg" className="pointer mainColor" onClick={()=>{this.changeMemberModalToggle();this.selectedMember(eachMember);this.setTopic("แก้ไขข้อมูลสมาชิก")}}/></td>
-                            <td><Fa icon="trash-alt" size="lg" className="pointer mainColor" onClick={()=>this.deleteMember(eachMember.username)}/></td>
+                            <td>
+                              {eachMember.status === 'admin'
+                                ? null
+                                : <Fa icon="edit" size="lg" className="pointer mainColor" onClick={()=>{this.changeMemberModalToggle();this.selectedMember(eachMember);this.setTopic("แก้ไขข้อมูลสมาชิก")}}/>
+                              }
+                            </td>
+                            <td>
+                              {eachMember.status === 'admin'
+                                ? null
+                                : <Fa icon="trash-alt" size="lg" className="pointer mainColor" onClick={()=>{this.changeMemberModalToggle();this.selectedMember(eachMember);this.setTopic("ลบข้อมูลสมาชิก")}}/>
+                              }
+                            </td>
                           </tr>
                         )
                       }

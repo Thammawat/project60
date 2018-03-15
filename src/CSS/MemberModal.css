@@ -10,7 +10,7 @@
   position: fixed;
   z-index:99;
   top:10vh;
-  left:32.5vw;
+  left:40vw;
   border-top: 5px solid #373a47;
   border-radius: 5px;
   width:35vw;
@@ -97,4 +97,15 @@ button.MemberModalSubmitButton:active ,button.MemberModalCancelButton {
   border: 2px solid #373a47;
   background-color: #EEEEEE;
   color:#373a47;
+}
+
+.alertUsername{
+  color: red;
+  font-size: 16px;
+}
+
+
+.disableIcon {
+  cursor: not-allowed;
+  color: #8e92a0;
 }

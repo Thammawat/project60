@@ -22,6 +22,7 @@
   width:50%;
   text-align: left;
   display: inline-block;
+  margin-bottom: 1em;
 }
 
 .SettingHeader {
@@ -30,12 +31,20 @@
 }
 
 .EditButtonArea {
-  width:50%;
+  width:16%;
   text-align: right;
   display: inline-block;
+  margin-bottom: 1em;
 }
 
-button.EditButton {
+.ResetButtonArea{
+  width:34%;
+  text-align: right;
+  display: inline-block;
+  margin-bottom: 1em;
+}
+
+button.EditButton ,button.ResetButton{
   outline: none;
   padding:0.5em 1em;
   background-color: #373A47;
@@ -47,12 +56,12 @@ button.EditButton {
   cursor: pointer;
 }
 
-button.EditButton:active {
+button.EditButton:active ,button.ResetButton:active {
   color:#373A47;
   background-color: white;
 }
 
-.EditIcon, .SaveIcon {
+.EditIcon, .SaveIcon ,.ResetIcon{
   margin-right: 0.5em;
 }
 

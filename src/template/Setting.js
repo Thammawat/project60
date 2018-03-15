@@ -2,7 +2,12 @@ import React, {Component} from 'react';
 import '../CSS/Setting.css';
 import Fa from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free-solid';
+import ResetModal from './ResetModal.js';
+import ConfirmModal from './ConfirmModal.js';
+import axios from 'axios';
 import { connect } from 'react-redux';
+
+import { getUserData } from '../reducers/userData/userDataAction.js';
 
 class Setting extends Component {
   constructor(props){
@@ -10,14 +15,9 @@ class Setting extends Component {
     this.state = {
       onEdit: false,
       userAccount: {},
+      resetPasswordToggle: false,
+      alreadyReset: false,
     };
-  }
-
-  componentWillMount=()=>{
-    console.log("work")
-    this.setState({
-      userAccount: this.props.userData,
-    })
   }
 
   ToggleEdit=()=>{
@@ -26,7 +26,7 @@ class Setting extends Component {
     })
   }
 
-  handleFirstname=(e)=>{
+  handleFirstname = (e) => {
     var temp = this.state.userAccount
     temp.firstname = e.target.value
     this.setState({
@@ -58,10 +58,66 @@ class Setting extends Component {
     })
   }
 
+  changeResetPasswordToggle=()=>{
+    this.setState({
+      resetPasswordToggle: !this.state.resetPasswordToggle
+    })
+  }
+
+  showResetSuccess=()=>{
+    this.setState({
+      resetPasswordToggle: false,
+      alreadyReset: true,
+    })
+  }
+
+  closeSuccessModal=()=>{
+    this.setState({
+      alreadyReset: false,
+    })
+  }
+
+  saveData=()=>{
+    axios.post("http://localhost:3000/user/editProfileUser",
+    {
+      data: {
+        username: this.props.userData.username,
+        token: this.props.userToken,
+        newUsername: this.state.userAccount.username,
+        newFirstname: this.state.userAccount.firstname,
+        newLastname: this.state.userAccount.lastname,
+      }
+    },
+    {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Control-Type': 'application/json'
+      }
+    })
+    .then(data => {
+      if(data.data.result === "User edit success"){
+        console.log(data.data.userData)
+        this.props.getUserData(data.data.userData, data.data.token)
+        this.ToggleEdit()
+      }
+    })
+    .catch(error => {
+      console.log(error)
+    });
+  }
+
   render() {
-    console.log(this.props.userData)
+    console.log(this.props.userToken)
     return(
       <div className="SettingArea">
+        {this.state.resetPasswordToggle === true
+          ? <ResetModal changeResetPasswordToggle={this.changeResetPasswordToggle} showResetSuccess={this.showResetSuccess}/>
+          : null
+        }
+        {this.state.alreadyReset === true
+          ? <ConfirmModal closeSuccessModal={this.closeSuccessModal} MemberModalTopic="เปลี่ยนรหัสผ่าน"/>
+          : null
+        }
         <div className="SettingTopic">
           <span>ข้อมูลผู้ใช้</span>
         </div>
@@ -69,13 +125,19 @@ class Setting extends Component {
           <div className="SettingHeaderArea">
             <span className="SettingHeader">รายละเอียดข้อมูล</span>
           </div>
+          <div className="ResetButtonArea">
+            <button type="button" className="ResetButton" onClick={()=>this.changeResetPasswordToggle()}>
+              <Fa icon="unlock" size="lg" className="ResetIcon" />
+              <span>ตั้งรหัสผ่านใหม่</span>
+            </button>
+          </div>
           <div className="EditButtonArea">
             {this.state.onEdit === false
               ? <button type="button" className="EditButton" onClick={()=>this.ToggleEdit()}>
                   <Fa icon='pencil-alt' size="lg" className="EditIcon" />
                   <span>แก้ไขข้อมูล</span>
                 </button>
-              : <button type="button" className="EditButton" onClick={()=>this.ToggleEdit()}>
+              : <button type="button" className="EditButton" onClick={()=>this.saveData()}>
                   <Fa icon='save' size="lg" className="SaveIcon" />
                   <span>บันทึกข้อมูล</span>
                 </button>
@@ -88,11 +150,14 @@ class Setting extends Component {
             </div>
             {this.state.onEdit === false
               ? <div className="EachFormData">
-                  <span className="DataFont">: {this.state.userAccount.firstname}</span>
+                  <span className="DataFont">: {this.props.userData.firstname}</span>
                 </div>
               : <div className="EachFormData">
                   <span className="DataFont">: </span>
-                  <input type="text" value={this.state.userAccount.firstname} onChange={this.handleFirstname} className="DataInput"/>
+                  <input type="text"
+                   defaultValue={this.props.userData.firstname}
+                   value={this.state.userAccount.firstname}
+                  name="firstname" onChange={this.handleFirstname} className="DataInput"/>
                 </div>
             }
           </div>
@@ -102,11 +167,11 @@ class Setting extends Component {
             </div>
             {this.state.onEdit === false
               ? <div className="EachFormData">
-                  <span className="DataFont">: {this.state.userAccount.lastname}</span>
+                  <span className="DataFont">: {this.props.userData.lastname}</span>
                 </div>
               : <div className="EachFormData">
                   <span className="DataFont">: </span>
-                  <input type="text" value={this.state.userAccount.lastname} onChange={this.handleLastname} className="DataInput"/>
+                  <input type="text" defaultValue={this.props.userData.lastname} value={this.state.userAccount.lastname} onChange={this.handleLastname} className="DataInput"/>
                 </div>
             }
           </div>
@@ -118,37 +183,27 @@ class Setting extends Component {
             </div>
             {this.state.onEdit === false
               ? <div className="EachFormData">
-                  <span className="DataFont">: {this.state.userAccount.username}</span>
+                  <span className="DataFont">: {this.props.userData.username}</span>
                 </div>
               : <div className="EachFormData">
                   <span className="DataFont">: </span>
-                  <input type="text" value={this.state.userAccount.username} onChange={this.handleUsername} className="DataInput"/>
+                  <input type="text" defaultValue={this.props.userData.username} value={this.state.userAccount.username} onChange={this.handleUsername} className="DataInput"/>
                 </div>
             }
           </div>
-          <div className="EachFormArea">
-            <div className="EachFormTopic">
-              <span>รหัสผ่าน</span>
-            </div>
-            {this.state.onEdit === false
-              ? <div className="EachFormData">
-                  <span className="DataFont">: {this.state.userAccount.password}</span>
-                </div>
-              : <div className="EachFormData">
-                  <span className="DataFont">: </span>
-                  <input type="text" value={this.state.userAccount.password} onChange={this.handlePassword} className="DataInput"/>
-                </div>
-            }
-          </div>
-          <div className="spaceDiv" />
         </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  userData: state.UserData.userData
+const mapDispatchToProps = (dispatch) => ({
+  getUserData: (data, token) => dispatch(getUserData(data, token)),
 });
 
-export default connect(mapStateToProps, null)(Setting);
+const mapStateToProps = (state) => ({
+  userData: state.UserData.userData,
+  userToken: state.UserData.userToken,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Setting);

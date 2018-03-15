@@ -10,8 +10,11 @@ class MemberModal extends Component {
   constructor(props){
     super(props);
     this.state = {
-      tempMember: {},
+      tempMember: {
+        status:'member',
+      },
       currentMember: {},
+      sameUsername: false,
     }
   }
 
@@ -93,7 +96,12 @@ class MemberModal extends Component {
     .then(data => {
       console.log(data);
       if(data.data.result === "User has Created"){
-        this.props.changeMemberModalToggle()
+        this.props.toConfirmModal()
+      }
+      if(data.data.result === "Username is same"){
+        this.setState({
+          sameUsername: true,
+        })
       }
     })
     .catch(error => {
@@ -122,11 +130,38 @@ class MemberModal extends Component {
     .then(data => {
       console.log(data);
       if(data.data.result === "User edit success"){
-        this.props.getCurrentMember(this.state.currentMember)
-        this.props.changeMemberModalToggle()
+        this.props.getCurrentMember({})
+        this.props.toConfirmModal()
       }
     })
     .catch(error => {
+      console.log(error)
+    });
+  }
+
+  deleteMember=()=>{
+    axios.post("http://localhost:3000/user/removeUser",
+    {
+      data: {
+        adminUsername: this.props.userData.username,
+        adminStatus: this.props.userData.status,
+        token: this.props.userToken,
+        username: this.props.currentMember.username,
+      }
+    },
+    {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Control-Type': 'application/json'
+      }
+    })
+    .then(data => {
+      if(data.data.result === "User remove success"){
+        this.props.getCurrentMember({})
+        this.props.toConfirmModal()
+      }
+    })
+    .catch(error =>{
       console.log(error)
     });
   }
@@ -144,24 +179,24 @@ class MemberModal extends Component {
                 </div>
                 <div className="MemberModalBody">
                   <div className="HalfModal">
-                    <input type="text" className="MemberModalInput" placeholder="ชื่อ" value={this.state.tempMember.firstname} onChange={this.changeFirstname}/>
+                    <input type="text" className="MemberModalInput" placeholder="ชื่อ" value={this.state.tempMember.firstname} onChange={this.changeFirstname} required/>
                   </div>
                   <div style={{width:'5%',display:'inline-block'}} />
                   <div className="HalfModal">
-                    <input type="text" className="MemberModalInput" placeholder="นามสกุล" value={this.state.tempMember.lastname} onChange={this.changeLastname}/>
+                    <input type="text" className="MemberModalInput" placeholder="นามสกุล" value={this.state.tempMember.lastname} onChange={this.changeLastname} required/>
                   </div>
                   <div>
-                    <input type="text" className="MemberModalInput" placeholder="ชื่อบัญชี" value={this.state.tempMember.username} onChange={this.changeUsername}/>
+                    {this.state.sameUsername === true
+                      ? <span className="alertUsername">** ชื่อบัญชีนี้ถูกใช้ไปเรียบร้อยแล้ว กรุณาเปลี่ยนชื่อบัญชีใหม่ **</span>
+                      : null
+                    }
+                    <input type="text" className="MemberModalInput" placeholder="ชื่อบัญชี" value={this.state.tempMember.username} onChange={this.changeUsername} required/>
                   </div>
                   <div>
-                    <input type="password" className="MemberModalInput" placeholder="รหัสผ่าน" value={this.state.tempMember.password} onChange={this.changePassword}/>
+                    <input type="password" className="MemberModalInput" placeholder="รหัสผ่าน" value={this.state.tempMember.password} onChange={this.changePassword} required/>
                   </div>
                   <div className="PermissionTopic">
                     <span>สถานะของสมาชิก :</span>
-                  </div>
-                  <div className="PermissionList">
-                    <input type="radio" value="admin" checked={this.state.tempMember.status === 'admin'} onChange={this.changeStatus} className="PermissionChoice" />
-                    <span> ผู้ดูแลระบบ</span>
                   </div>
                   <div className="PermissionList">
                     <input type="radio" value="assistant" checked={this.state.tempMember.status === 'assistant'} onChange={this.changeStatus} className="PermissionChoice" />
@@ -182,7 +217,10 @@ class MemberModal extends Component {
                 </div>
               </div>
             </form>
-          : <form onSubmit={this.editData}>
+          : null
+        }
+        {this.props.MemberModalTopic === "แก้ไขข้อมูลสมาชิก"
+          ? <form onSubmit={this.editData}>
               <div className="MemberModalOutside" onClick={()=>this.props.changeMemberModalToggle()} />
               <div className="MemberModalInside animated fadeInUp">
                 <div className="MemberModalTopic">
@@ -198,10 +236,6 @@ class MemberModal extends Component {
                   </div>
                   <div className="PermissionTopic">
                     <span>สถานะของสมาชิก :</span>
-                  </div>
-                  <div className="PermissionList">
-                    <input type="radio" value="admin" checked={this.state.currentMember.status === 'admin'} onChange={this.editStatus} className="PermissionChoice" />
-                    <span> ผู้ดูแลระบบ</span>
                   </div>
                   <div className="PermissionList">
                     <input type="radio" value="assistant" checked={this.state.currentMember.status === 'assistant'} onChange={this.editStatus} className="PermissionChoice" />
@@ -222,6 +256,29 @@ class MemberModal extends Component {
                 </div>
               </div>
             </form>
+          : null
+        }
+        {this.props.MemberModalTopic === "ลบข้อมูลสมาชิก"
+          ? <div>
+              <div className="MemberModalOutside" onClick={()=>this.props.changeMemberModalToggle()} />
+              <div className="MemberModalInside animated fadeInUp">
+                <div className="MemberModalTopic">
+                  <span>ยืนยันการลบ</span>
+                </div>
+                <div className="MemberModalBody center">
+                  <span>ท่านต้องการที่จะลบคุณ{this.props.currentMember.firstname} {this.props.currentMember.lastname}ใช่หรือไม่ ?</span>
+                </div>
+                <div className="MemberModalButtonArea">
+                  <div className="MemberModalCancelArea">
+                    <button type="button" className="MemberModalCancelButton" onClick={()=>this.props.changeMemberModalToggle()}>ยกเลิก</button>
+                  </div>
+                  <div className="MemberModalSubmitArea">
+                    <button type="button" onClick={()=>this.deleteMember()} className="MemberModalSubmitButton">ตกลง</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          : null
         }
       </div>
     );

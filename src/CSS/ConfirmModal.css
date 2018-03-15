@@ -1,4 +1,4 @@
-.LogoutConfirmModalOutside {
+.ConfirmModalOutside {
   width:100vw;
   height: 100vh;
   position: fixed;
@@ -6,11 +6,11 @@
   background: rgba(0, 0, 0, 0.4);
 }
 
-.LogoutConfirmModalInside {
+.ConfirmModalInside {
   position: fixed;
   z-index:99;
-  top:25vh;
-  left:32.5vw;
+  top:20vh;
+  left:40vw;
   border-top: 5px solid #373a47;
   border-radius: 5px;
   width:30vw;
@@ -18,38 +18,27 @@
   padding:1em;
 }
 
-.LogoutConfirmModalTopic {
+.ConfirmModalTopic {
   font-size: 24px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 0.5em;
 }
 
-.LogoutConfirmModalBody {
+.ConfirmModalBody {
   text-align: center;
   font-size: 20px;
   margin-bottom: 1em;
 }
 
-.LogoutConfirmModalButtonArea {
+.ConfirmModalButtonArea {
   margin-top: 0.75em;
   padding-top: 1em;
   border-top: 3px solid #373a47;
+  text-align: center;
 }
 
-.LogoutConfirmModalCancelArea {
-  width:50%;
-  text-align: left;
-  display: inline-block;
-}
-
-.LogoutConfirmModalSubmitArea {
-  width:50%;
-  text-align: right;
-  display: inline-block;
-}
-
-button.LogoutConfirmModalSubmitButton ,button.LogoutConfirmModalCancelButton {
+button.ConfirmModalSubmitButton {
   font-size: 20px;
   border-radius: 10px;
   padding:0.3em 1em;
@@ -58,13 +47,13 @@ button.LogoutConfirmModalSubmitButton ,button.LogoutConfirmModalCancelButton {
   cursor: pointer;
 }
 
-button.LogoutConfirmModalSubmitButton ,button.LogoutConfirmModalCancelButton:active {
+button.ConfirmModalSubmitButton {
   border: 2px solid #373a47;
   background-color: #373a47;
   color:#EEEEEE;
 }
 
-button.LogoutConfirmModalSubmitButton:active ,button.LogoutConfirmModalCancelButton {
+button.ConfirmModalSubmitButton:active {
   border: 2px solid #373a47;
   background-color: #EEEEEE;
   color:#373a47;

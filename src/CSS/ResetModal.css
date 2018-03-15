@@ -1,4 +1,4 @@
-.LogoutConfirmModalOutside {
+.ResetModalOutside {
   width:100vw;
   height: 100vh;
   position: fixed;
@@ -6,50 +6,50 @@
   background: rgba(0, 0, 0, 0.4);
 }
 
-.LogoutConfirmModalInside {
+.ResetModalInside {
   position: fixed;
   z-index:99;
-  top:25vh;
-  left:32.5vw;
+  top:20vh;
+  left:40vw;
   border-top: 5px solid #373a47;
   border-radius: 5px;
-  width:30vw;
+  width:35vw;
   background-color: #EEEEEE;
   padding:1em;
 }
 
-.LogoutConfirmModalTopic {
+.ResetModalTopic {
   font-size: 24px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 0.5em;
 }
 
-.LogoutConfirmModalBody {
-  text-align: center;
+.ResetModalBody {
   font-size: 20px;
   margin-bottom: 1em;
 }
 
-.LogoutConfirmModalButtonArea {
+.ResetModalButtonArea {
   margin-top: 0.75em;
   padding-top: 1em;
   border-top: 3px solid #373a47;
 }
 
-.LogoutConfirmModalCancelArea {
+.ResetModalCancelArea {
   width:50%;
   text-align: left;
   display: inline-block;
 }
 
-.LogoutConfirmModalSubmitArea {
+.ResetModalSubmitArea {
   width:50%;
   text-align: right;
   display: inline-block;
 }
 
-button.LogoutConfirmModalSubmitButton ,button.LogoutConfirmModalCancelButton {
+
+button.ResetModalSubmitButton ,button.ResetModalCancelButton {
   font-size: 20px;
   border-radius: 10px;
   padding:0.3em 1em;
@@ -58,14 +58,29 @@ button.LogoutConfirmModalSubmitButton ,button.LogoutConfirmModalCancelButton {
   cursor: pointer;
 }
 
-button.LogoutConfirmModalSubmitButton ,button.LogoutConfirmModalCancelButton:active {
+button.ResetModalSubmitButton ,button.ResetModalCancelButton:active {
   border: 2px solid #373a47;
   background-color: #373a47;
   color:#EEEEEE;
 }
 
-button.LogoutConfirmModalSubmitButton:active ,button.LogoutConfirmModalCancelButton {
+button.ResetModalSubmitButton:active ,button.ResetModalCancelButton {
   border: 2px solid #373a47;
   background-color: #EEEEEE;
   color:#373a47;
+}
+
+input.ResetModalInput {
+  width:100%;
+  font-size: 18px;
+  padding: 0em 0.5em;
+  outline:none;
+  border-radius: 3px;
+  border: 1px solid #A9A9A9;
+  margin:0.25em 0em;
+}
+
+.alertPassword {
+  color: red;
+  font-size: 16px;
 }

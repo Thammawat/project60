@@ -21,7 +21,7 @@ class LogoutConfirmModal extends Component {
           <div className="LogoutConfirmModalBody">
             <span>คุณต้องการที่จะออกจากระบบใช่หรือไม่ ?</span>
           </div>
-          <div className="LogoutConfirmModalbButtonArea">
+          <div className="LogoutConfirmModalButtonArea">
             <div className="LogoutConfirmModalCancelArea">
               <button type="button" className="LogoutConfirmModalCancelButton" onClick={()=>this.props.changeLogoutToggle()}>ยกเลิก</button>
             </div>
