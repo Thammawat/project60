@@ -115,6 +115,27 @@ router.post('/editPasswordUser', function (req, res) {
         res.json({ 'result': 'fail' })
     }
 })
+
+router.post('/editProfileUser', function (req, res) {
+    if (bcrypt.compareSync(req.body.data.username, req.body.data.token)) {
+        User.findOne({ username: req.body.data.username }, function (err, user) {
+            User.findOneAndUpdate({ username: req.body.data.username }, { username: req.body.data.newUsername,firstname: req.body.data.newFirstname,lastname: req.body.data.newLastname }, function (err, user) {
+                if (err) throw err;
+                bcrypt.genSalt(10, function (err, salt) {
+                    if (err) return next(err);
+                    // hash the password using our new salt
+                    bcrypt.hash(req.body.data.newUsername, salt, null, function (err, hash) {
+                        if (err) return next(err);
+                        res.json({ 'result': 'User edit success', 'token': hash, 'userData': user })
+                    });
+                });
+            })
+        });
+    }
+    else {
+        res.json({ 'result': 'fail' })
+    }
+})
 router.post('/login', function (req, res) {
     console.log(req.body)
     User.findOne({ username: req.body.data.username }, function (err, user) {
