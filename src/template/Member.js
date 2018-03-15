@@ -9,8 +9,8 @@ import { connect } from 'react-redux';
 import { getCurrentMember } from '../reducers/userData/userDataAction.js';
 
 class Member extends Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state = {
       MemberModalTopic: null,
       MemberModalToggle: false,
@@ -32,6 +32,7 @@ class Member extends Component {
         allOfUser: data.data.user,
       })
     })
+    console.log(this.state.allOfUser)
     this.setState({
       MemberModalToggle: !this.state.MemberModalToggle,
     })

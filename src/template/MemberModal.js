@@ -7,8 +7,8 @@ import { getCurrentMember } from '../reducers/userData/userDataAction.js';
 
 
 class MemberModal extends Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state = {
       tempMember: {},
       currentMember: {},

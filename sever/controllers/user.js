@@ -65,16 +65,16 @@ router.post('/addUser', function (req, res) {
 })
 
 router.post('/removeUser', function (req, res) {
-  if ((bcrypt.compareSync(req.body.data.adminUsername, req.body.data.token)) && req.body.data.adminStatus === "admin" || req.body.data.adminStatus === "assistant") {
-          User.findOneAndRemove({ username: req.body.data.username }, function (err) {
-              if (err) throw err;
-              // we have deleted the user
-              res.json({ 'result': 'User remove success' })
-          });
-      }
-      else {
-          res.json({ 'result': 'fail' })
-      }
+    if ((bcrypt.compareSync(req.body.data.adminUsername, req.body.data.token)) && req.body.data.adminStatus === "admin" || req.body.data.adminStatus === "assistant") {
+        User.findOneAndRemove({ username: req.body.data.username }, function (err) {
+            if (err) throw err;
+            // we have deleted the user
+            res.json({ 'result': 'User remove success' })
+        });
+    }
+    else {
+        res.json({ 'result': 'fail' })
+    }
 })
 
 router.post('/editStatusUser', function (req, res) {
@@ -90,6 +90,31 @@ router.post('/editStatusUser', function (req, res) {
     }
 })
 
+
+router.post('/editPasswordUser', function (req, res) {
+    if (bcrypt.compareSync(req.body.data.username, req.body.data.token)) {
+        User.findOne({ username: req.body.data.username }, function (err, user) {
+            if (bcrypt.compareSync(req.body.data.password, user.password)) {
+                bcrypt.genSalt(10, function (err, salt) {
+                    if (err) return next(err);
+                    bcrypt.hash(req.body.data.newPassword, salt, null, function (err, hash) {
+                        if (err) return next(err);
+                        User.findOneAndUpdate({ username: req.body.data.username }, { password: hash }, function (err, user) {
+                            if (err) throw err;
+                            res.json({ 'result': 'User edit success' })
+                        })
+                    });
+                });
+            }
+            else {
+                res.json({ 'result': 'fail old password is not true' })
+            }
+        });
+    }
+    else {
+        res.json({ 'result': 'fail' })
+    }
+})
 router.post('/login', function (req, res) {
     console.log(req.body)
     User.findOne({ username: req.body.data.username }, function (err, user) {
