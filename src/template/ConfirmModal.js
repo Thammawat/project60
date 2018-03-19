@@ -69,6 +69,20 @@ class ConfirmModal extends Component {
             </div>
           : null
         }
+        {this.props.MemberModalTopic === "แก้ไขข้อมูลส่วนตัว"
+          ? <div className="ConfirmModalInside animated fadeInUp">
+              <div className="ConfirmModalTopic">
+                <span>แก้ไขข้อมูลสำเร็จ</span>
+              </div>
+              <div className="ConfirmModalBody">
+                <span>แก้ไขข้อมูลส่วนตัวเรียบร้อย</span>
+              </div>
+              <div className="ConfirmModalButtonArea">
+                <button type="button" className="ConfirmModalSubmitButton" onClick={()=>this.props.closeSuccessModal()} >ตกลง</button>
+              </div>
+            </div>
+          : null
+        }
       </div>
     );
   }

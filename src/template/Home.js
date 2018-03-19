@@ -61,20 +61,27 @@ class Home extends Component {
   componentDidMount=()=>{
     axios.get('http://localhost:3000/currentBusPosition')
       .then(data => {
+
+    })
+    axios.get('http://localhost:3000/currentBusPosition/busData')
+      .then(data => {
         this.setState({
           busInputData: data.data.busData
         })
-    })
+      })
     this.inputInterval = setInterval(this.updateBusPosition,6000)
   }
 
   componentWillUnmount=()=>{
     clearInterval(this.inputInterval)
-    clearInterval(this.busPositonInterval)
   }
 
   updateBusPosition=()=>{
     axios.get('http://localhost:3000/currentBusPosition')
+      .then(data => {
+
+      })
+    axios.get('http://localhost:3000/currentBusPosition/busData')
       .then(data => {
         this.setState({
           busInputData: data.data.busData
@@ -91,7 +98,7 @@ class Home extends Component {
       ))
       Result = GenBus.map((eachBus) => {
         return(
-          <div className="BusPosition" lat={eachBus.lat} lng={eachBus.lon}>
+          <div className="BusPosition" lat={eachBus.lat} lng={eachBus.lng}>
             <Fa icon="bus" size="lg" />
           </div>
         )
@@ -244,86 +251,8 @@ class Home extends Component {
                   }
                 </div>
               </div>
-              {/*<div className="center">
-                <div className="descriptionBox">
-                  <div className="showBusLine">
-                    <span>{this.state.results[1].bus}</span>
-                  </div>
-                  <div className="showPath">
-                    <span>{this.state.results[1].path}</span>
-                  </div>
-                  {this.state.arrivals === true
-                    ? <div>
-                        <div className="OnLeftOption">
-                          <span>ขาเข้า</span>
-                        </div>
-                        <div className="RightOption" onClick={()=>this.toDepartures()}>
-                          <span>ขาออก</span>
-                        </div>
-                      </div>
-                    : <div>
-                        <div className="LeftOption" onClick={()=>this.toArrivals()}>
-                          <span>ขาเข้า</span>
-                        </div>
-                        <div className="OnRightOption">
-                          <span>ขาออก</span>
-                        </div>
-                      </div>
-                  }
-                </div>
-              </div>*/}
             </div>
         }
-        {/*{this.state.loginToken === false
-          ? <div style={{display:'inline'}}>
-              <Fa name="user-circle-o" size="2x" className="UserIcon" onClick={()=>this.changeUserToggle()}/>
-              {this.state.userToggle === true
-                ? <div>
-                    <div className="LoginModal animated fadeInDown">
-                      <div style={{width:'100%',textAlign:'center'}}>
-                        <span className="Warning">เฉพาะเจ้าหน้าที่เท่านั้น</span>
-                      </div>
-                      <input type="text" value={this.state.username} onChange={this.handleUsername} placeholder="บัญชีผู้ใช้" className="FillForm"/>
-                      <input type="password" value={this.state.password} onChange={this.handlePassword} placeholder="รหัสผ่าน" className="FillForm"/>
-                      <div style={{width:'100%',textAlign:'center'}}>
-                        <button className="LoginButton" onClick={()=>this.loginToggle()}>เข้าสู่ระบบ</button>
-                      </div>
-                    </div>
-                  </div>
-                : null
-              }
-            </div>
-          : <div style={{display:'inline'}}>
-              {this.state.userImage === ''
-                ? <Fa name="user-circle-o" size="2x" className="UserIcon" onClick={()=>this.changeUserToggle()}/>
-                : <img src={this.state.userImage} className="userImage" onClick={()=>this.changeUserToggle()} />
-              }
-              {this.state.userToggle === true
-                ? <div>
-                    <div className="LoginModal animated fadeInDown" style={{padding:'0px'}}>
-                      <div style={{textAlign:'center',padding:'0.5em',borderBottom:'1px solid #A9A9A9'}}>
-                        <span className="Welcome">นายธนนภัช สุโพธิ์</span>
-                      </div>
-                      <div style={{textAlign:'center'}}>
-                        <ul className="UserOption">
-                          <li onClick={()=>this.userOption('1')}>เพิ่มสมาชิกใหม่</li>
-                          <li onClick={()=>this.userOption('2')}>การตั้งค่า</li>
-                          <li onClick={()=>this.loginToggle()} style={{borderRadius:'0px 0px 5px 5px'}}>ออกจากระบบ</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                : null
-              }
-            </div>
-        }
-        {this.state.userChoice != null
-          ? <div>
-              <div className="BgSideBar" onClick={()=>this.userCancel()} />
-              <UserOptionModal option={this.state.userChoice} userCancel={this.userCancel}/>
-            </div>
-          : null
-        }*/}
       </div>
     );
   }

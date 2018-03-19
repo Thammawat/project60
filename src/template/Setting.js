@@ -17,6 +17,7 @@ class Setting extends Component {
       userAccount: {},
       resetPasswordToggle: false,
       alreadyReset: false,
+      MemberModalTopic: null,
     };
   }
 
@@ -77,7 +78,36 @@ class Setting extends Component {
     })
   }
 
-  saveData=()=>{
+  changeTopic=(data)=>{
+    this.setState({
+      MemberModalTopic: data,
+    })
+  }
+
+  saveData=(e)=>{
+    e.preventDefault()
+    if(!this.state.userAccount.firstname){
+      console.log("hello")
+      var temp = this.state.userAccount
+      temp.firstname = this.props.userData.firstname
+      this.setState({
+        userAccount: temp
+      })
+    }
+    if(!this.state.userAccount.lastname){
+      var temp = this.state.userAccount
+      temp.lastname = this.props.userData.lastname
+      this.setState({
+        userAccount: temp
+      })
+    }
+    if(!this.state.userAccount.username){
+      var temp = this.state.userAccount
+      temp.username = this.props.userData.username
+      this.setState({
+        userAccount: temp
+      })
+    }
     axios.post("http://localhost:3000/user/editProfileUser",
     {
       data: {
@@ -96,9 +126,11 @@ class Setting extends Component {
     })
     .then(data => {
       if(data.data.result === "User edit success"){
-        console.log(data.data.userData)
         this.props.getUserData(data.data.userData, data.data.token)
         this.ToggleEdit()
+        this.setState({
+          alreadyReset: true
+        })
       }
     })
     .catch(error => {
@@ -107,7 +139,6 @@ class Setting extends Component {
   }
 
   render() {
-    console.log(this.props.userToken)
     return(
       <div className="SettingArea">
         {this.state.resetPasswordToggle === true
@@ -115,7 +146,7 @@ class Setting extends Component {
           : null
         }
         {this.state.alreadyReset === true
-          ? <ConfirmModal closeSuccessModal={this.closeSuccessModal} MemberModalTopic="เปลี่ยนรหัสผ่าน"/>
+          ? <ConfirmModal closeSuccessModal={this.closeSuccessModal} MemberModalTopic={this.state.MemberModalTopic}/>
           : null
         }
         <div className="SettingTopic">
@@ -126,71 +157,84 @@ class Setting extends Component {
             <span className="SettingHeader">รายละเอียดข้อมูล</span>
           </div>
           <div className="ResetButtonArea">
-            <button type="button" className="ResetButton" onClick={()=>this.changeResetPasswordToggle()}>
+            <button type="button" className="ResetButton" onClick={()=>{this.changeResetPasswordToggle();this.changeTopic("เปลี่ยนรหัสผ่าน")}}>
               <Fa icon="unlock" size="lg" className="ResetIcon" />
               <span>ตั้งรหัสผ่านใหม่</span>
             </button>
           </div>
           <div className="EditButtonArea">
             {this.state.onEdit === false
-              ? <button type="button" className="EditButton" onClick={()=>this.ToggleEdit()}>
+              ? <button type="button" className="EditButton" onClick={()=>{this.ToggleEdit();this.changeTopic("แก้ไขข้อมูลส่วนตัว")}}>
                   <Fa icon='pencil-alt' size="lg" className="EditIcon" />
                   <span>แก้ไขข้อมูล</span>
                 </button>
-              : <button type="button" className="EditButton" onClick={()=>this.saveData()}>
-                  <Fa icon='save' size="lg" className="SaveIcon" />
-                  <span>บันทึกข้อมูล</span>
+              : <button type="button" className="OnEdit">
+                  <Fa icon='pencil-alt' size="lg" className="SaveIcon" />
+                  <span>กำลังแก้ไข</span>
                 </button>
             }
           </div>
-          <div className="spaceDiv" />
-          <div className="EachFormArea">
-            <div className="EachFormTopic">
-              <span>ชื่อ</span>
+          <form onSubmit={this.saveData}>
+            <div className="spaceDiv" />
+            <div className="EachFormArea">
+              <div className="EachFormTopic">
+                <span>ชื่อ</span>
+              </div>
+              {this.state.onEdit === false
+                ? <div className="EachFormData">
+                    <span className="DataFont">: {this.props.userData.firstname}</span>
+                  </div>
+                : <div className="EachFormData">
+                    <span className="DataFont">: </span>
+                    <input type="text"
+                     defaultValue={this.props.userData.firstname}
+                     value={this.state.userAccount.firstname}
+                    name="firstname" onChange={this.handleFirstname} className="DataInput"/>
+                  </div>
+              }
             </div>
-            {this.state.onEdit === false
-              ? <div className="EachFormData">
-                  <span className="DataFont">: {this.props.userData.firstname}</span>
-                </div>
-              : <div className="EachFormData">
-                  <span className="DataFont">: </span>
-                  <input type="text"
-                   defaultValue={this.props.userData.firstname}
-                   value={this.state.userAccount.firstname}
-                  name="firstname" onChange={this.handleFirstname} className="DataInput"/>
-                </div>
-            }
-          </div>
-          <div className="EachFormArea">
-            <div className="EachFormTopic">
-              <span>นามสกุล</span>
+            <div className="EachFormArea">
+              <div className="EachFormTopic">
+                <span>นามสกุล</span>
+              </div>
+              {this.state.onEdit === false
+                ? <div className="EachFormData">
+                    <span className="DataFont">: {this.props.userData.lastname}</span>
+                  </div>
+                : <div className="EachFormData">
+                    <span className="DataFont">: </span>
+                    <input type="text" defaultValue={this.props.userData.lastname} value={this.state.userAccount.lastname} onChange={this.handleLastname} className="DataInput"/>
+                  </div>
+              }
             </div>
-            {this.state.onEdit === false
-              ? <div className="EachFormData">
-                  <span className="DataFont">: {this.props.userData.lastname}</span>
-                </div>
-              : <div className="EachFormData">
-                  <span className="DataFont">: </span>
-                  <input type="text" defaultValue={this.props.userData.lastname} value={this.state.userAccount.lastname} onChange={this.handleLastname} className="DataInput"/>
-                </div>
-            }
-          </div>
-          <div className="spaceDiv" />
-          <div className="spaceDiv" />
-          <div className="EachFormArea">
-            <div className="EachFormTopic">
-              <span>ชื่อบัญชี</span>
+            <div className="spaceDiv" />
+            <div className="spaceDiv" />
+            <div className="EachFormArea">
+              <div className="EachFormTopic">
+                <span>ชื่อบัญชี</span>
+              </div>
+              {this.state.onEdit === false
+                ? <div className="EachFormData">
+                    <span className="DataFont">: {this.props.userData.username}</span>
+                  </div>
+                : <div className="EachFormData">
+                    <span className="DataFont">: </span>
+                    <input type="text" defaultValue={this.props.userData.username} value={this.state.userAccount.username} onChange={this.handleUsername} className="DataInput"/>
+                  </div>
+              }
             </div>
-            {this.state.onEdit === false
-              ? <div className="EachFormData">
-                  <span className="DataFont">: {this.props.userData.username}</span>
+            {this.state.onEdit === true
+              ? <div style={{marginTop:"1em"}}>
+                  <div style={{display:"inline-block",width:"50%",textAlign:"left"}}>
+                    <button type="button" className="SettingCancelButton" onClick={()=>this.ToggleEdit()}>ยกเลิก</button>
+                  </div>
+                  <div style={{display:"inline-block",width:"50%",textAlign:"right"}}>
+                    <button type="submit" className="AcceptButton" >ตกลง</button>
+                  </div>
                 </div>
-              : <div className="EachFormData">
-                  <span className="DataFont">: </span>
-                  <input type="text" defaultValue={this.props.userData.username} value={this.state.userAccount.username} onChange={this.handleUsername} className="DataInput"/>
-                </div>
+              : null
             }
-          </div>
+          </form>
         </div>
       </div>
     );

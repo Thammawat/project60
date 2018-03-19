@@ -44,7 +44,7 @@
   margin-bottom: 1em;
 }
 
-button.EditButton ,button.ResetButton{
+button.EditButton ,button.ResetButton , button.AcceptButton{
   outline: none;
   padding:0.5em 1em;
   background-color: #373A47;
@@ -56,9 +56,38 @@ button.EditButton ,button.ResetButton{
   cursor: pointer;
 }
 
-button.EditButton:active ,button.ResetButton:active {
+button.EditButton:active ,button.ResetButton:active ,button.AcceptButton:active{
   color:#373A47;
   background-color: white;
+}
+
+button.SettingCancelButton {
+  outline: none;
+  padding:0.5em 1em;
+  background-color: white;
+  color:#373A47;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 2px solid #373A47;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button.SettingCancelButton:active {
+  background-color: #373A47;
+  color:white;
+}
+
+button.OnEdit {
+  outline: none;
+  padding:0.5em 1em;
+  background-color: #373A47;
+  color:white;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 2px solid #373A47;
+  font-weight: bold;
+  cursor: not-allowed;
 }
 
 .EditIcon, .SaveIcon ,.ResetIcon{
