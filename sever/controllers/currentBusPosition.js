@@ -50,8 +50,8 @@ router.get('/', function (req, res) {
 })
 
 
-router.post('/busData', function (req, res) {
-  BusData.find({ path: req.body.data.path }, function (err, data) {
+router.get('/busData', function (req, res) {
+  BusData.find({}, function (err, data) {
     if (err) throw err;
     res.json({ 'busData': data })
   })
