@@ -46,10 +46,10 @@ router.post('/findRoadPath', function (req, res) {
                     element.nameTH === req.body.data.busStop2
                 ))
                 if (startPath.length !== 0) {
-                    start.push({ pathStart: 0, path: roadBusStop[j].busRoad })
+                    start.push({ pathStart: 0, path: roadBusStop[j].busRoad, busPoint: startPath[0].nameTH })
                 }
                 if (endPath.length !== 0) {
-                    end.push({ pathEnd: 0, path: roadBusStop[j].busRoad })
+                    end.push({ pathEnd: 0, path: roadBusStop[j].busRoad, busPoint: endPath[0].nameTH })
                 }
             }
             console.log(start)
@@ -78,7 +78,7 @@ router.post('/findRoadPath', function (req, res) {
                 var startSequence = pathStart[0].sequence
                 var endSequence = pathEnd[0].sequence
                 if (startSequence < endSequence) {
-                    res.json({ 'result':'success','roadPath': path,'roadType': 'single' })
+                    res.json({ 'result': 'success', 'roadPath': path, 'roadType': 'single' })
                 }
                 else {
                     res.json({ 'result': 'error on data' })
@@ -114,8 +114,6 @@ router.post('/findRoadPath', function (req, res) {
                         end.push({ pathEnd: endContact[0].busRoad, path: element.contractWith })
                     })
                 })
-                console.log(start)
-                console.log(end)
                 for (var j = 1; j < start.length; j++) {
                     end.forEach(endData => {
                         var endContact = contactPath.filter(element => (
@@ -176,7 +174,6 @@ router.post('/findRoadPath', function (req, res) {
                             minRoadPath = element.roadPath.length
                     }
                 })
-                console.log(minRoadPath)
                 answer = answer.filter(element => (element.roadPath.length === minRoadPath))
                 answer.forEach((answer, index) => {
                     var busStopPathStart = roadBusStop.filter(element => (
@@ -217,7 +214,52 @@ router.post('/findRoadPath', function (req, res) {
                     }
                 })
                 if (finalRoadPath.length !== 0) {
-                    res.json({ 'result':'success','roadPath': finalRoadPath, 'roadType': 'multiple' })
+                    var busPoint = []
+                    finalRoadPath.forEach(roadPath => {
+                        for (var i = 0; i < roadPath.length; i++) {
+                            var point = []
+                            if (i === 0) {
+                                point.push(req.body.data.busStop1)
+                                var busStopPath = roadBusStop.filter(element => (
+                                    element.busRoad === roadPath[0]
+                                ))
+                                var contract = contactPath.filter(element => (
+                                    element.busRoad === roadPath[0]
+                                ))
+                                var result = busStopPath[0].busStop.filter(element => (
+                                    element.nameTH === startPlace
+                                ))
+                                var startSequence = result[0].sequence
+                                var contractWith = contract[0].contract.filter(element => (
+                                    element.contractWith === roadPath[1]
+                                ))
+                                var resultPath = contractWith[0].path.filter(element => (
+                                    element.sequence > startSequence
+                                ))
+                                point.push(resultPath[0].nameTH)
+                            }
+                            else if (i === roadPath.length - 1) {
+                                point.push(req.body.data.busStop2)
+                                busPoint.push({ busPoint: point })
+                            }
+                            else {
+                                var busStopPath = roadBusStop.filter(element => (
+                                    element.busRoad === roadPath[i]
+                                ))
+                                var contract = contactPath.filter(element => (
+                                    element.busRoad === roadPath[i]
+                                ))
+                                var contractWith = contract[0].contract.filter(element => (
+                                    element.contractWith === roadPath[i + 1]
+                                ))
+                                var resultPath = contractWith[0].path.filter(element => (
+                                    element.sequence > inItPath
+                                ))
+                                point.push(resultPath[0].nameTH)
+                            }
+                        }
+                    })
+                    res.json({ 'result': 'success', 'roadPath': finalRoadPath, 'roadType': 'multiple', busPoint: busPoint })
                 }
                 else {
                     res.json({ 'result': 'error on data' })
