@@ -263,7 +263,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
-  roadData: state.RoadData.roadData
+  roadData: state.RoadData.roadData,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

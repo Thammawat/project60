@@ -156,13 +156,11 @@ class Setting extends Component {
           <div className="SettingHeaderArea">
             <span className="SettingHeader">รายละเอียดข้อมูล</span>
           </div>
-          <div className="ResetButtonArea">
+          <div className="OptionButtonArea">
             <button type="button" className="ResetButton" onClick={()=>{this.changeResetPasswordToggle();this.changeTopic("เปลี่ยนรหัสผ่าน")}}>
               <Fa icon="unlock" size="lg" className="ResetIcon" />
               <span>ตั้งรหัสผ่านใหม่</span>
             </button>
-          </div>
-          <div className="EditButtonArea">
             {this.state.onEdit === false
               ? <button type="button" className="EditButton" onClick={()=>{this.ToggleEdit();this.changeTopic("แก้ไขข้อมูลส่วนตัว")}}>
                   <Fa icon='pencil-alt' size="lg" className="EditIcon" />

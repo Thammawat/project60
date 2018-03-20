@@ -23,7 +23,7 @@ class SearchBox extends Component{
       this.setState({
         searchString: this.state.currentItem,
       })
-      this.props.getSelectedValue(this.state.currentItem)
+      this.props.getSelectedValue(this.props.Box, this.state.currentItem)
     }
     this.setState({
       showItem:false,
@@ -53,14 +53,14 @@ class SearchBox extends Component{
     var libraries = this.props.item,
     searchString = this.state.searchString.trim().toLowerCase();
     if(searchString.length > 0) {
-      libraries = libraries.filter(function(i){
-        return i.name.toLowerCase().match(searchString);
-      });
+      libraries = libraries.filter(i => (
+        i.name.toLowerCase().indexOf(searchString) >= 0 )
+      );
     }
     return(
       <div style={{display:'inline-block'}}>
         <div className="DropdownSearchbox">
-          <input type="text" value={this.state.searchString} onChange={this.handleSearch} placeholder="กรุณากรอกข้อมูล" className="SearchBox" onFocus={()=>this.onFocus()} onBlur={()=>this.autoComplete()}/>
+          <input type="text" value={this.state.searchString} onChange={this.handleSearch} placeholder="กรุณากรอกข้อมูล" className="SearchBox" onFocus={()=>this.onFocus()} onBlur={()=>this.autoComplete()} required/>
           {this.state.searchString != '' && this.state.showItem === true
             ? <ul>
                 {libraries.map((i,index) => {

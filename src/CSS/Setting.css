@@ -19,7 +19,7 @@
 }
 
 .SettingHeaderArea{
-  width:50%;
+  width:30%;
   text-align: left;
   display: inline-block;
   margin-bottom: 1em;
@@ -30,18 +30,22 @@
   font-weight: bold;
 }
 
-.EditButtonArea {
-  width:16%;
+.OptionButtonArea {
+  width:70%;
   text-align: right;
   display: inline-block;
-  margin-bottom: 1em;
 }
 
-.ResetButtonArea{
-  width:34%;
-  text-align: right;
-  display: inline-block;
-  margin-bottom: 1em;
+button.ResetButton{
+  margin-right:1em;
+}
+
+button.AcceptButton{
+  font-size: 18px;
+}
+
+button.EditButton ,button.ResetButton{
+  font-size: 16px;
 }
 
 button.EditButton ,button.ResetButton , button.AcceptButton{
@@ -49,7 +53,6 @@ button.EditButton ,button.ResetButton , button.AcceptButton{
   padding:0.5em 1em;
   background-color: #373A47;
   color:white;
-  font-size: 16px;
   border-radius: 10px;
   border: 2px solid #373A47;
   font-weight: bold;
@@ -66,7 +69,7 @@ button.SettingCancelButton {
   padding:0.5em 1em;
   background-color: white;
   color:#373A47;
-  font-size: 16px;
+  font-size: 18px;
   border-radius: 10px;
   border: 2px solid #373A47;
   font-weight: bold;

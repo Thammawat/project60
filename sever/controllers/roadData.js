@@ -52,8 +52,6 @@ router.post('/findRoadPath', function (req, res) {
                     end.push({ pathEnd: 0, path: roadBusStop[j].busRoad, busPoint: endPath[0].nameTH })
                 }
             }
-            console.log(start)
-            console.log(end)
 
             for (var j = 0; j < start.length; j++) {
                 var samePath = end.filter(element => (
@@ -215,51 +213,56 @@ router.post('/findRoadPath', function (req, res) {
                 })
                 if (finalRoadPath.length !== 0) {
                     var busPoint = []
-                    finalRoadPath.forEach(roadPath => {
-                        for (var i = 0; i < roadPath.length; i++) {
-                            var point = []
+                    finalRoadPath.forEach(road => {
+                      var point = []
+                      var inItPath = 0
+                        for (var i = 0; i < road.roadPath.length; i++) {
                             if (i === 0) {
                                 point.push(req.body.data.busStop1)
                                 var busStopPath = roadBusStop.filter(element => (
-                                    element.busRoad === roadPath[0]
+                                    element.busRoad === road.roadPath[0]
                                 ))
                                 var contract = contactPath.filter(element => (
-                                    element.busRoad === roadPath[0]
+                                    element.busRoad === road.roadPath[0]
                                 ))
                                 var result = busStopPath[0].busStop.filter(element => (
-                                    element.nameTH === startPlace
+                                    element.nameTH === req.body.data.busStop1
                                 ))
                                 var startSequence = result[0].sequence
                                 var contractWith = contract[0].contract.filter(element => (
-                                    element.contractWith === roadPath[1]
+                                    element.contractWith === road.roadPath[1]
                                 ))
                                 var resultPath = contractWith[0].path.filter(element => (
                                     element.sequence > startSequence
                                 ))
+                                var endSequence = resultPath[0].sequence
+                                inItPath = resultPath[0].contractAt
                                 point.push(resultPath[0].nameTH)
                             }
-                            else if (i === roadPath.length - 1) {
+                            else if (i === road.roadPath.length - 1) {
                                 point.push(req.body.data.busStop2)
-                                busPoint.push({ busPoint: point })
+                                busPoint.push({ buspoint: point })
+                                console.log(busPoint);
                             }
                             else {
                                 var busStopPath = roadBusStop.filter(element => (
-                                    element.busRoad === roadPath[i]
+                                    element.busRoad === road.roadPath[i]
                                 ))
                                 var contract = contactPath.filter(element => (
-                                    element.busRoad === roadPath[i]
+                                    element.busRoad === road.roadPath[i]
                                 ))
                                 var contractWith = contract[0].contract.filter(element => (
-                                    element.contractWith === roadPath[i + 1]
+                                    element.contractWith === road.roadPath[i + 1]
                                 ))
                                 var resultPath = contractWith[0].path.filter(element => (
                                     element.sequence > inItPath
                                 ))
+                                inItPath = resultPath[0].contractAt
                                 point.push(resultPath[0].nameTH)
                             }
                         }
                     })
-                    res.json({ 'result': 'success', 'roadPath': finalRoadPath, 'roadType': 'multiple', busPoint: busPoint })
+                    res.json({ 'result': 'success', 'roadPath': finalRoadPath, 'roadType': 'multiple', 'busPoint': busPoint })
                 }
                 else {
                     res.json({ 'result': 'error on data' })
@@ -272,7 +275,7 @@ router.post('/findRoadPath', function (req, res) {
 
 
 router.post('/roadPathWay', function (req, res) {
-    //roadPathWay = (startPlace, endPlace, roadPath) 
+    //roadPathWay = (startPlace, endPlace, roadPath)
     let roadBusStop = []
     let roadMapBus = []
     let contactPath = []

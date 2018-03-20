@@ -131,7 +131,7 @@ class Member extends Component {
                           <th>สถานะ</th>
                         </tr>
                     }
-                    {this.state.allOfUser.map((eachMember, index) => {
+                    {this.state.allOfUser.sort((a, b) => (a.status > b.status)).map((eachMember, index) => {
                       if(this.props.userData.status === 'admin' || this.props.userData.status === 'assistant'){
                         return(
                           <tr key={index}>

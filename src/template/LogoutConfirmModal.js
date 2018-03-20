@@ -1,6 +1,10 @@
 import React , {Component} from 'react';
 import '../CSS/LogoutConfirmModal.css';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
+import { getUserData } from '../reducers/userData/userDataAction.js';
 
 class LogoutConfirmModal extends Component {
   constructor(){
@@ -8,6 +12,11 @@ class LogoutConfirmModal extends Component {
     this.state = {
 
     };
+  }
+
+  LogOut=()=>{
+    this.props.getUserData(null, null)
+    this.context.router.history.push('/')
   }
 
   render(){
@@ -26,9 +35,7 @@ class LogoutConfirmModal extends Component {
               <button type="button" className="LogoutConfirmModalCancelButton" onClick={()=>this.props.changeLogoutToggle()}>ยกเลิก</button>
             </div>
             <div className="LogoutConfirmModalSubmitArea">
-              <Link to="">
-                <button type="submit" className="LogoutConfirmModalSubmitButton" >ตกลง</button>
-              </Link>
+              <button type="submit" className="LogoutConfirmModalSubmitButton" onClick={this.LogOut}>ตกลง</button>
             </div>
           </div>
         </div>
@@ -37,5 +44,12 @@ class LogoutConfirmModal extends Component {
   }
 }
 
+LogoutConfirmModal.contextTypes = {
+  router: PropTypes.object.isRequired
+}
 
-export default LogoutConfirmModal;
+const mapDispatchToProps = (dispatch) => ({
+  getUserData: (data, token) => dispatch(getUserData(data, token)),
+});
+
+export default connect(null, mapDispatchToProps)(LogoutConfirmModal);

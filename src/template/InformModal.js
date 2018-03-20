@@ -17,18 +17,40 @@ class Modal extends Component {
   constructor(props){
     super(props)
     this.state = {
+      resultFromSearch: null,
       resultPage: null,
       currentPage: 1,
-      showSearch1: false,
-      showSearch2: false,
+      showSearch: false,
       busName: null,
+      busStop: [],
+      busPoint: [],
       selectedBusName: null,
       username:null,
       password:null,
+      box1: null,
+      box2: null,
+      roadType: null,
+      NoRoute: false,
     };
   }
 
   componentWillMount=()=>{
+    axios.get("http://localhost:3000/roadData/busStop").then(data =>{
+      var temp = []
+      data.data.busStop.map((eachRoute, index) => {
+        eachRoute.busStop.map((eachSign) => {
+          var check = temp.filter((element) => (
+            element.name === eachSign.nameTH
+          ))
+          if(check.length === 0){
+            temp.push({name: eachSign.nameTH})
+          }
+        })
+      })
+      this.setState({
+        busStop: temp
+      })
+    })
     var temp = []
     for(var index = 0; index < this.props.roadData.length; index++){
       temp.push({
@@ -47,41 +69,12 @@ class Modal extends Component {
     })
   }
 
-  showSearchToggle=(data)=>{
-    var tempPage = []
-    for(var temp = 0;temp < Math.ceil(this.props.results.length/10);temp++){
-      tempPage[temp] = temp+1;
-    }
-    this.setState({
-      resultPage: tempPage,
-    })
-    if(data === '1'){
-      this.setState({
-        showSearch1: true,
-      })
-    }
-    if(data === '2'){
-      this.setState({
-        showSearch2: true,
-      })
-    }
-  }
-
   closeSearchToggle=(data)=>{
     this.setState({
       resultPage: null,
       currentPage: 1,
+      showSearch: false
     })
-    if(data === '1'){
-      this.setState({
-        showSearch1: false,
-      })
-    }
-    if(data === '2'){
-      this.setState({
-        showSearch2: false,
-      })
-    }
   }
 
   toPreviousPage=()=>{
@@ -100,12 +93,24 @@ class Modal extends Component {
     }
   }
 
-  getSelectedValue=(data)=>{
-    for(var index = 0; index < this.state.busName.length;index++){
-      if(this.state.busName[index].name === data){
-        this.setState({
-          selectedBusName: index,
-        })
+  getSelectedValue=(box, data)=>{
+    if(box === "1"){
+      this.setState({
+        box1: data
+      })
+    }
+    if(box === "2"){
+      this.setState({
+        box2: data
+      })
+    }
+    if(box === "3"){
+      for(var index = 0; index < this.state.busName.length;index++){
+        if(this.state.busName[index].name === data){
+          this.setState({
+            selectedBusName: index,
+          })
+        }
       }
     }
   }
@@ -145,29 +150,119 @@ class Modal extends Component {
     });
   }
 
+  searchPath=(e)=>{
+    e.preventDefault()
+    console.log(this.state.box1)
+    console.log(this.state.box2)
+    axios.post("http://localhost:3000/roadData/findRoadPath",
+    {
+      data: {
+        busStop1: this.state.box1,
+        busStop2: this.state.box2
+      }
+    },
+    {
+      headers:{
+        'Access-Control-Allow-Origin': '*',
+        'Control-Type': 'application/json'
+      }
+    })
+    .then(data =>{
+      console.log(data)
+      if(data.data.result === "success"){
+        var tempPage = []
+        for(var temp = 0;temp < Math.ceil(data.data.roadPath.length/10);temp++){
+          tempPage[temp] = temp+1;
+        }
+        if(data.data.busPoint){
+          this.setState({
+            busPoint: data.data.busPoint,
+          })
+        }
+        else {
+          this.setState({
+            busPoint: [this.state.box1, this.state.box2],
+          })
+        }
+        this.setState({
+          NoRoute: false,
+          roadType: data.data.roadType,
+          resultPage: tempPage,
+          resultFromSearch: data.data.roadPath,
+          showSearch: true,
+        })
+      }
+      else {
+        this.setState({
+          NoRoute: true,
+        })
+      }
+    })
+    .catch(error => {
+      console.log(error)
+    });
+  }
+
+  getBoxValue=(data)=>{
+    if(data === "1"){
+      this.set
+    }
+  }
+
+  showSelectedPath=(data)=>{
+    axios.post("http://localhost:3000/roadData/roadPathWay",
+    {
+      data: {
+        startPlace: this.state.box1,
+        endPlace: this.state.box2,
+        roadPath: data,
+      }
+    },
+    {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Control-Type': 'application/json'
+      }
+    })
+    .then(data => {
+      console.log(data)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  }
+
   render(){
     return(
       <div>
         {this.props.select === '1'
           ? <div className="LargeModal animated fadeInUp">
-              {this.state.showSearch1 === false
+              {this.state.showSearch === false
                 ? <div>
-                    <div className="ModalTopic">
-                      <span>ค้นหาเส้นทาง</span>
-                    </div>
-                    <div className="ModalBody">
-                      <div className="HalfSide">
-                        <span className="ModalHeading">จุดเริ่มต้น</span>
-                        <SearchBox item={this.props.libraries}/>
+                    <form onSubmit={this.searchPath}>
+                      <div className="ModalTopic">
+                        <span>ค้นหาเส้นทาง</span>
                       </div>
-                      <div className="HalfSide">
-                        <span className="ModalHeading">ปลายทาง</span>
-                        <SearchBox item={this.props.libraries}/>
+                      <div className="ModalBody">
+                        <div className="HalfSide">
+                          <span className="ModalHeading">จุดเริ่มต้น</span>
+                          <SearchBox item={this.state.busStop} Box="1" getSelectedValue={this.getSelectedValue}/>
+                        </div>
+                        <div className="HalfSide">
+                          <span className="ModalHeading">ปลายทาง</span>
+                          <SearchBox item={this.state.busStop} Box="2" getSelectedValue={this.getSelectedValue}/>
+                        </div>
+                        {this.state.NoRoute === true
+                          ? <div style={{textAlign:'center',color:'red',fontSize:'18px',marginTop:'1em'}}>
+                              <span>** ขออภัย ไม่พบเส้นทางที่ท่านค้นหา **</span>
+                            </div>
+                          : null
+                        }
+                        <div className="ButtonArea">
+                            <button type="submit" className="SearchButton" >ค้นหา</button>
+                        </div>
                       </div>
-                      <div className="ButtonArea">
-                          <button className="SearchButton" onClick={()=>this.showSearchToggle(this.props.select)}>ค้นหา</button>
-                      </div>
-                    </div>
+                    </form>
                   </div>
                 : <div>
                     <div className="ModalTopic">
@@ -179,20 +274,54 @@ class Modal extends Component {
                         <thead>
                           <tr>
                             <th>สายรถเมย์</th>
-                            <th>เส้นทางการเดินรถ</th>
+                            <th>การเดินทาง</th>
                             <th>ดูเส้นทาง</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {this.props.results.map((eachResult, index) => {
+                          {this.state.resultFromSearch.map((eachResult, index) => {
                             if(Math.ceil((index+1)/10) === this.state.currentPage){
-                              return(
-                                <tr key={eachResult.bus}>
-                                  <td>{eachResult.bus}</td>
-                                  <td>{eachResult.path}</td>
-                                  <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>{this.props.Polyline(),this.props.toMapDetail(eachResult.bus, eachResult.path)}}/></td>
-                                </tr>
-                              )
+                              if(this.state.roadType === "single"){
+                                return(
+                                  <tr key={index}>
+                                    <td>{eachResult}</td>
+                                    <td>{this.state.busPoint.map((way, index) => {
+                                      if(index === this.state.busPoint.length-1){
+                                        return(way)
+                                      }
+                                      else {
+                                        return(way + " - ")
+                                      }
+                                    })}</td>
+                                    <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>this.showSelectedPath([eachResult])}/></td>
+                                  </tr>
+                                )
+                              }
+                              else {
+                                return(
+                                  <tr key={index}>
+                                    <td>{
+                                      eachResult.roadPath.map((eachRoute,index)=>{
+                                        if(index === eachResult.roadPath.length-1){
+                                          return(eachRoute)
+                                        }
+                                        else{
+                                          return(eachRoute + " ต่อ ")
+                                        }
+                                      })
+                                    }</td>
+                                    <td>{this.state.busPoint[index].buspoint.map((way, idx) => {
+                                      if(idx === this.state.busPoint[index].buspoint.length-1){
+                                        return(way)
+                                      }
+                                      else{
+                                        return(way + " - ")
+                                      }
+                                    })}</td>
+                                    <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>this.showSelectedPath(eachResult.roadPath)}/></td>
+                                  </tr>
+                                )
+                              }
                             }
                           })}
                         </tbody>
@@ -237,7 +366,7 @@ class Modal extends Component {
                 <div className="ModalBody">
                   <div className="HalfSide">
                     <span className="ModalHeading">สายรถเมย์</span>
-                    <SearchBox item={this.state.busName} getSelectedValue={this.getSelectedValue}/>
+                    <SearchBox item={this.state.busName} box="3" getSelectedValue={this.getSelectedValue}/>
                   </div>
                   <div className="ButtonArea">
                     <button className="SearchButton" onClick={()=>{this.props.toMapDetail(this.state.busName[this.state.selectedBusName].name, this.state.busName[this.state.selectedBusName].fullname,this.props.roadData[this.state.selectedBusName].centerPath),this.props.Polyline(this.props.roadData[this.state.selectedBusName])}}>ค้นหา</button>

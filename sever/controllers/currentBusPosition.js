@@ -11,7 +11,6 @@ router.get('/', function (req, res) {
       var busDatabase = busData.filter(element => (
         element.path === '39' || element.path === '63' || element.path === '97'
       ))
-      console.log(busDatabase.length)
       if (busDatabase.length !== 0) {
         busDatabase.forEach(element => {
           BusData.findOne({ busID: element.busID }, function (err, bus) {
@@ -27,7 +26,7 @@ router.get('/', function (req, res) {
               })
               newBusData.save(function (err) {
                 if (err) throw err;
-                console.log('save success')
+                //console.log('save success')
               });
             }
             else {
@@ -38,13 +37,13 @@ router.get('/', function (req, res) {
                 time: element.time,
               }, function (err, bus) {
                 if (err) throw err;
-                console.log('update success')
+                //console.log('update success')
               })
             }
           })
         })
       }
-      console.log(busDatabase)
+      //console.log(busDatabase)
       res.json({ 'busData': busData })
     })
 })
