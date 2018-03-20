@@ -78,7 +78,7 @@ router.post('/findRoadPath', function (req, res) {
                 var startSequence = pathStart[0].sequence
                 var endSequence = pathEnd[0].sequence
                 if (startSequence < endSequence) {
-                    res.json({ 'roadPath': path })
+                    res.json({ 'result':'success','roadPath': path })
                 }
                 else {
                     res.json({ 'result': 'error on data' })
@@ -217,7 +217,7 @@ router.post('/findRoadPath', function (req, res) {
                     }
                 })
                 if (finalRoadPath.length !== 0) {
-                    res.json({ 'roadPath': finalRoadPath })
+                    res.json({ 'result':'success','roadPath': finalRoadPath })
                 }
                 else {
                     res.json({ 'result': 'error on data' })
