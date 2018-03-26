@@ -15,6 +15,7 @@ class LogoutConfirmModal extends Component {
   }
 
   LogOut=()=>{
+    localStorage.clear()
     this.props.getUserData(null, null)
     this.context.router.history.push('/')
   }

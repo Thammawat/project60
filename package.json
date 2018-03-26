@@ -36,6 +36,7 @@
     "react": "^16.2.0",
     "react-avatar-editor": "^10.3.0",
     "react-chartjs-2": "^2.7.0",
+    "react-csv-downloader": "^0.1.4",
     "react-date-picker": "^6.8.1",
     "react-dom": "^16.2.0",
     "react-fa": "^5.0.0",

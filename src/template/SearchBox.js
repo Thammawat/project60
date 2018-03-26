@@ -25,6 +25,9 @@ class SearchBox extends Component{
       })
       this.props.getSelectedValue(this.props.Box, this.state.currentItem)
     }
+    else {
+      this.props.getSelectedValue(this.props.Box, this.state.searchString)
+    }
     this.setState({
       showItem:false,
       currentItem: '',

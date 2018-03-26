@@ -109,8 +109,8 @@ class Home extends Component {
 
   Polyline=(data)=>{
     var test = [];
-    for(var i = 0; i < data.roadMapBus.roadMap.length; i++){
-      var tempObj = {lat:data.roadMapBus.roadMap[i].lat, lng:data.roadMapBus.roadMap[i].lng}
+    for(var i = 0; i < data.length; i++){
+      var tempObj = {lat:data[i].lat, lng:data[i].lng}
       test.push(tempObj)
     }
     polyline = new this.state.maps.Polyline({

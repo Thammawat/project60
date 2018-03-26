@@ -15,17 +15,6 @@ class Dashboard extends Component {
     this.state = {
       DbOption:'home',
       LogoutToggle:false,
-      RoutePath:[
-        {name:'ต.113'},
-        {name:'A1'},
-        {name:'T3'},
-        {name:'8'},
-        {name:'ปอ. 79'},
-        {name:'1548'},
-        {name:'ต.13'},
-        {name:'751'},
-        {name:'B'},
-      ],
     };
   }
 

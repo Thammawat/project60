@@ -6972,6 +6972,13 @@ react-chartjs-2@^2.7.0:
     lodash "^4.17.4"
     prop-types "^15.5.8"
 
+react-csv-downloader@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/react-csv-downloader/-/react-csv-downloader-0.1.4.tgz#1bbea104bfeeca7c0bb31fcfdd77f57d5de1d450"
+  dependencies:
+    react "^15.0.1"
+    react-dom "^15.0.1"
+
 react-date-picker@^6.8.1:
   version "6.8.1"
   resolved "https://registry.yarnpkg.com/react-date-picker/-/react-date-picker-6.8.1.tgz#20bcf3dc32e68593e2ff02fd638d27216e51884c"
@@ -7026,6 +7033,15 @@ react-dom@>=15.5, "react-dom@^15 || ^16", react-dom@^16.2.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.0"
+
+react-dom@^15.0.1:
+  version "15.6.2"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.6.2.tgz#41cfadf693b757faf2708443a1d1fd5a02bef730"
+  dependencies:
+    fbjs "^0.8.9"
+    loose-envify "^1.1.0"
+    object-assign "^4.1.0"
+    prop-types "^15.5.10"
 
 react-error-overlay@^2.0.2:
   version "2.0.2"
@@ -7182,6 +7198,16 @@ react@>=15.5, "react@^15 || ^16", react@^16.2.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.0"
+
+react@^15.0.1:
+  version "15.6.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-15.6.2.tgz#dba0434ab439cfe82f108f0f511663908179aa72"
+  dependencies:
+    create-react-class "^15.6.0"
+    fbjs "^0.8.9"
+    loose-envify "^1.1.0"
+    object-assign "^4.1.0"
+    prop-types "^15.5.10"
 
 read-all-stream@^3.0.0:
   version "3.1.0"

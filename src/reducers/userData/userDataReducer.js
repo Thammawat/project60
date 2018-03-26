@@ -1,6 +1,11 @@
 const initialState = {
-  userData: null,
-  userToken: null,
+  userData: {
+    firstname: localStorage.getItem('firstname'),
+    lastname: localStorage.getItem('lastname'),
+    username: localStorage.getItem('username'),
+    status: localStorage.getItem('status'),
+  },
+  userToken: localStorage.getItem('token'),
   currentMember: {},
 };
 

@@ -31,6 +31,7 @@ class Modal extends Component {
       box2: null,
       roadType: null,
       NoRoute: false,
+      checkBus: false,
     };
   }
 
@@ -141,6 +142,11 @@ class Modal extends Component {
     })
     .then(data => {
       if(data.data.result === "success"){
+        localStorage.setItem('username',data.data.userData.username)
+        localStorage.setItem('firstname',data.data.userData.firstname)
+        localStorage.setItem('lastname',data.data.userData.lastname)
+        localStorage.setItem('status',data.data.userData.status)
+        localStorage.setItem('token',data.data.token)
         this.props.getUserData(data.data.userData, data.data.token)
         this.context.router.history.push('/dashboard');
       }
@@ -209,13 +215,13 @@ class Modal extends Component {
     }
   }
 
-  showSelectedPath=(data)=>{
+  showSelectedPath=(busRoute, index)=>{
     axios.post("http://localhost:3000/roadData/roadPathWay",
     {
       data: {
         startPlace: this.state.box1,
         endPlace: this.state.box2,
-        roadPath: data,
+        roadPath: busRoute,
       }
     },
     {
@@ -225,11 +231,52 @@ class Modal extends Component {
       }
     })
     .then(data => {
-      console.log(data)
+      this.props.Polyline(data.data.roadWay)
+      var temp = "";
+      for(var idx = 0; idx < busRoute.length; idx++){
+        if(idx === busRoute.length - 1){
+          temp = temp.concat(busRoute[idx] + ".")
+        }
+        else {
+          temp = temp.concat(busRoute[idx] + " ต่อ ")
+        }
+      }
+      var path = "";
+      if(this.state.roadType === 'single'){
+        path = path.concat(this.state.busPoint[0] + " - " +  this.state.busPoint[1])
+      }
+      else{
+        for(var i = 0; i < this.state.busPoint[index].buspoint.length; i++){
+          if(i === this.state.busPoint[index].buspoint.length - 1){
+            path = path.concat(this.state.busPoint[index].buspoint[i])
+          }
+          else {
+            path = path.concat(this.state.busPoint[index].buspoint[i] + " - ")
+          }
+        }
+      }
+      var center = data.data.roadWay[Math.ceil(data.data.roadWay.length/2)]
+      this.props.toMapDetail(temp,path,center)
     })
     .catch(error => {
       console.log(error)
     })
+  }
+
+  showBusRoute=(data)=>{
+    console.log(data)
+    if(data !== null){
+      this.props.toMapDetail(this.state.busName[data].name, this.state.busName[data].fullname,this.props.roadData[data].centerPath)
+      this.props.Polyline(this.props.roadData[data].roadMapBus.roadMap)
+      this.setState({
+        checkBus: false
+      })
+    }
+    else {
+      this.setState({
+        checkBus: true
+      })
+    }
   }
 
   render(){
@@ -273,9 +320,9 @@ class Modal extends Component {
                       <table className="Result">
                         <thead>
                           <tr>
-                            <th>สายรถเมย์</th>
-                            <th>การเดินทาง</th>
-                            <th>ดูเส้นทาง</th>
+                            <th style={{width:"20%"}}>สายรถเมย์</th>
+                            <th style={{width:"60%"}}>การเดินทาง</th>
+                            <th style={{width:"20%"}}>ดูเส้นทาง</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -293,7 +340,7 @@ class Modal extends Component {
                                         return(way + " - ")
                                       }
                                     })}</td>
-                                    <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>this.showSelectedPath([eachResult])}/></td>
+                                    <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>this.showSelectedPath([eachResult], index)}/></td>
                                   </tr>
                                 )
                               }
@@ -318,7 +365,7 @@ class Modal extends Component {
                                         return(way + " - ")
                                       }
                                     })}</td>
-                                    <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>this.showSelectedPath(eachResult.roadPath)}/></td>
+                                    <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>this.showSelectedPath(eachResult.roadPath, index)}/></td>
                                   </tr>
                                 )
                               }
@@ -366,10 +413,16 @@ class Modal extends Component {
                 <div className="ModalBody">
                   <div className="HalfSide">
                     <span className="ModalHeading">สายรถเมย์</span>
-                    <SearchBox item={this.state.busName} box="3" getSelectedValue={this.getSelectedValue}/>
+                    <SearchBox item={this.state.busName} Box="3" getSelectedValue={this.getSelectedValue}/>
                   </div>
+                  {this.state.checkBus === true
+                    ? <div style={{textAlign:'center',color:'red',fontSize:'18px',marginTop:'1em'}}>
+                        <span>** ขออภัย ไม่พบสายรถที่ท่านค้นหา **</span>
+                      </div>
+                    : null
+                  }
                   <div className="ButtonArea">
-                    <button className="SearchButton" onClick={()=>{this.props.toMapDetail(this.state.busName[this.state.selectedBusName].name, this.state.busName[this.state.selectedBusName].fullname,this.props.roadData[this.state.selectedBusName].centerPath),this.props.Polyline(this.props.roadData[this.state.selectedBusName])}}>ค้นหา</button>
+                    <button className="SearchButton" onClick={()=>this.showBusRoute(this.state.selectedBusName)}>ค้นหา</button>
                   </div>
                 </div>
               </div>
@@ -377,29 +430,34 @@ class Modal extends Component {
           : null
         }
         {this.props.select === '0'
-          ? <form onSubmit={this.checkLogin}>
-              <div className="Modal animated fadeInUp">
-                <div className="ModalTopic" style={{marginBottom:'0.1em'}}>
-                  <span>เข้าสู่ระบบ</span>
-                </div>
-                <div className="ModalWarning">
-                  <span>**เฉพาะเจ้าหน้าที่เท่านั้น**</span>
-                </div>
-                <div className="ModalBody">
-                  <div>
-                    <span className="ModalHeading">ชื่อบัญชี</span>
-                    <input type='text' value={this.state.username} onChange={this.handleUsername} placeholder='กรุณากรอกชื่อบัญชี' className="LoginBox" required/>
+          ? <div>
+            {this.props.userToken !== null
+              ? this.context.router.history.push('/dashboard')
+              : <form onSubmit={this.checkLogin}>
+                <div className="Modal animated fadeInUp">
+                  <div className="ModalTopic" style={{marginBottom:'0.1em'}}>
+                    <span>เข้าสู่ระบบ</span>
                   </div>
-                  <div>
-                    <span className="ModalHeading">รหัสผ่าน</span>
-                    <input type='password' value={this.state.password} onChange={this.handlePassword} placeholder='กรุณากรอกรหัสผ่าน' className="LoginBox" required/>
+                  <div className="ModalWarning">
+                    <span>**เฉพาะเจ้าหน้าที่เท่านั้น**</span>
                   </div>
-                  <div className="LoginArea">
-                    <button type="submit" value="submit" className="LoginButton">เข้าสู่ระบบ</button>
+                  <div className="ModalBody">
+                    <div>
+                      <span className="ModalHeading">ชื่อบัญชี</span>
+                      <input type='text' value={this.state.username} onChange={this.handleUsername} placeholder='กรุณากรอกชื่อบัญชี' className="LoginBox" required/>
+                    </div>
+                    <div>
+                      <span className="ModalHeading">รหัสผ่าน</span>
+                      <input type='password' value={this.state.password} onChange={this.handlePassword} placeholder='กรุณากรอกรหัสผ่าน' className="LoginBox" required/>
+                    </div>
+                    <div className="LoginArea">
+                      <button type="submit" value="submit" className="LoginButton">เข้าสู่ระบบ</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </form>
+              </form>
+            }
+          </div>
           : null
         }
       </div>
@@ -417,7 +475,8 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => ({
   roadData: state.RoadData.roadData,
-  userData: state.UserData.userData
+  userData: state.UserData.userData,
+  userToken: state.UserData.userToken,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Modal);
