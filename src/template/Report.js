@@ -175,7 +175,7 @@ class Report extends Component {
     var result = [];
     for(var index = 0; index < GlobalResult.length; index++){
       result.push({
-        index: (index+1).toString(),
+        index: index+1,
         time: GlobalResult[index].timeStamp.slice(11),
         busName: GlobalResult[index].busRoad,
         busID: GlobalResult[index].busID,
@@ -183,6 +183,47 @@ class Report extends Component {
       });
     }
     var datas = result;
+    var year = new Date(this.state.date).getFullYear();
+    var month = new Date(this.state.date).getMonth();
+    var date = new Date(this.state.date).getDate();
+    switch(month) {
+      case 0:
+          month = "Jan";
+          break;
+      case 1:
+          month = "Feb";
+          break;
+      case 2:
+          month = "Mar";
+          break;
+      case 3:
+          month = "Apr";
+          break;
+      case 4:
+          month = "May";
+          break;
+      case 5:
+          month = "Jun";
+          break;
+      case 6:
+          month = "Jul";
+          break;
+      case 7:
+          month = "Aug";
+          break;
+      case 8:
+          month = "Sep";
+          break;
+      case 9:
+          month = "Oct";
+          break;
+      case 10:
+          month = "Nov";
+          break;
+      case 11:
+          month = "Dec";
+    };
+    var filename ="Report_" + date + "_" + month + "_" + year;
     return(
       <div className="ReportArea">
         <div className="ReportTopic">
@@ -219,7 +260,7 @@ class Report extends Component {
                   <span>ดาวน์โหลดรายงาน</span>
                 </button>
               : <CsvDownloader
-                filename={"Report" + this.state.date}
+                filename={filename}
                 columns={columns}
                 datas={datas}>
                   <button type='button' className="DownloadReport">
