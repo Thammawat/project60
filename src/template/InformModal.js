@@ -320,17 +320,18 @@ class Modal extends Component {
                       <table className="Result">
                         <thead>
                           <tr>
-                            <th style={{width:"20%"}}>สายรถเมย์</th>
-                            <th style={{width:"60%"}}>การเดินทาง</th>
-                            <th style={{width:"20%"}}>ดูเส้นทาง</th>
+                            <th style={{width:"15%"}}>เส้นทาง</th>
+                            <th style={{width:"20%"}}>สายรถเมล์</th>
+                            <th style={{width:"65%"}}>การเดินทาง</th>
                           </tr>
                         </thead>
-                        <tbody>
-                          {this.state.resultFromSearch.map((eachResult, index) => {
-                            if(Math.ceil((index+1)/10) === this.state.currentPage){
-                              if(this.state.roadType === "single"){
-                                return(
-                                  <tr key={index}>
+                        {this.state.resultFromSearch.map((eachResult, index) => {
+                          if(Math.ceil((index+1)/10) === this.state.currentPage){
+                            if(this.state.roadType === "single"){
+                              return(
+                                <tbody key={index}>
+                                  <tr>
+                                    <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>this.showSelectedPath([eachResult], index)}/></td>
                                     <td>{eachResult}</td>
                                     <td>{this.state.busPoint.map((way, index) => {
                                       if(index === this.state.busPoint.length-1){
@@ -340,38 +341,48 @@ class Modal extends Component {
                                         return(way + " - ")
                                       }
                                     })}</td>
-                                    <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>this.showSelectedPath([eachResult], index)}/></td>
                                   </tr>
+                                </tbody>
+                              )
+                            }
+                            else {
+                              if(eachResult.roadPath.length === 2){
+                                return(
+                                  <tbody key={index}>
+                                    <tr>
+                                      <td rowSpan="2"><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>this.showSelectedPath(eachResult.roadPath, index)}/></td>
+                                      <td>{eachResult.roadPath[0]}</td>
+                                      <td>{this.state.busPoint[index].buspoint[0] + " - " + this.state.busPoint[index].buspoint[1]}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>{eachResult.roadPath[1]}</td>
+                                      <td>{this.state.busPoint[index].buspoint[1] + " - " + this.state.busPoint[index].buspoint[2]}</td>
+                                    </tr>
+                                  </tbody>
                                 )
                               }
                               else {
                                 return(
-                                  <tr key={index}>
-                                    <td>{
-                                      eachResult.roadPath.map((eachRoute,index)=>{
-                                        if(index === eachResult.roadPath.length-1){
-                                          return(eachRoute)
-                                        }
-                                        else{
-                                          return(eachRoute + " ต่อ ")
-                                        }
-                                      })
-                                    }</td>
-                                    <td>{this.state.busPoint[index].buspoint.map((way, idx) => {
-                                      if(idx === this.state.busPoint[index].buspoint.length-1){
-                                        return(way)
-                                      }
-                                      else{
-                                        return(way + " - ")
-                                      }
-                                    })}</td>
-                                    <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>this.showSelectedPath(eachResult.roadPath, index)}/></td>
-                                  </tr>
+                                  <tbody key={index}>
+                                    <tr>
+                                      <td rowSpan="3"><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>this.showSelectedPath(eachResult.roadPath, index)}/></td>
+                                      <td>{eachResult.roadPath[0]}</td>
+                                      <td>{this.state.busPoint[index].buspoint[0] + " - " + this.state.busPoint[index].buspoint[1]}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>{eachResult.roadPath[1]}</td>
+                                      <td>{this.state.busPoint[index].buspoint[1] + " - " + this.state.busPoint[index].buspoint[2]}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>{eachResult.roadPath[2]}</td>
+                                      <td>{this.state.busPoint[index].buspoint[2] + " - " + this.state.busPoint[index].buspoint[3]}</td>
+                                    </tr>
+                                  </tbody>
                                 )
                               }
                             }
-                          })}
-                        </tbody>
+                          }
+                        })}
                       </table>
                     </div>
                     {this.state.resultPage.length > 1
@@ -383,7 +394,7 @@ class Modal extends Component {
                           {this.state.resultPage.map((eachPage) => {
                             if(eachPage === this.state.currentPage){
                               return(
-                                <span className="InPage" onClick={()=>this.changePage(eachPage)} id="">{eachPage}</span>
+                                <span className="InPage" onClick={()=>this.changePage(eachPage)}>{eachPage}</span>
                               )
                             }
                             else{

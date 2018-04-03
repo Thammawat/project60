@@ -68,6 +68,10 @@ class Report extends Component {
     return temp;
   }
 
+  nextPage=(data)=>{
+    console.log("work")
+  }
+
   showBusGulity=()=>{
     if(this.state.busGulity.length !== 0){
       var result = [];
@@ -106,8 +110,6 @@ class Report extends Component {
                   )
                 })}
               </table>
-              <div>
-              </div>
             </div>
           )
         }
@@ -153,6 +155,7 @@ class Report extends Component {
       }
     }
   }
+
 
   render() {
     const columns = [{
@@ -278,3 +281,7 @@ class Report extends Component {
 }
 
 export default Report;
+
+
+
+<script></script>

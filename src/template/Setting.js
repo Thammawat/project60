@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 
 import { getUserData } from '../reducers/userData/userDataAction.js';
 
+
+
 class Setting extends Component {
   constructor(props){
     super(props);
@@ -139,6 +141,8 @@ class Setting extends Component {
   }
 
   render() {
+    console.log(this.test)
+    console.log(this.num)
     return(
       <div className="SettingArea">
         {this.state.resetPasswordToggle === true

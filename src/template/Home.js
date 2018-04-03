@@ -27,7 +27,6 @@ class Home extends Component {
       burgerToggle: false,
       option: null,
       showRoute: false,
-      arrivals: true,
       selectedBus: null,
       selectedPath: null,
       currentBus: 0,
@@ -171,18 +170,6 @@ class Home extends Component {
     })
   }
 
-  toArrivals=()=>{
-    this.setState({
-      arrivals: true
-    })
-  }
-
-  toDepartures=()=>{
-    this.setState({
-      arrivals:false
-    })
-  }
-
   render() {
     return (
       <div>
@@ -226,29 +213,11 @@ class Home extends Component {
               <div style={{textAlign:'center',marginTop:'1em'}}>
                 <div className="descriptionBox">
                   <div className="showBusLine">
-                    <span>{this.state.selectedBus}</span>
+                    <span>สายที่ {this.state.selectedBus}</span>
                   </div>
                   <div className="showPath">
                     <span>{this.state.selectedPath}</span>
                   </div>
-                  {this.state.arrivals === true
-                    ? <div>
-                        <div className="OnLeftOption">
-                          <span>ขาเข้า</span>
-                        </div>
-                        <div className="RightOption" onClick={()=>this.toDepartures()}>
-                          <span>ขาออก</span>
-                        </div>
-                      </div>
-                    : <div>
-                        <div className="LeftOption" onClick={()=>this.toArrivals()}>
-                          <span>ขาเข้า</span>
-                        </div>
-                        <div className="OnRightOption">
-                          <span>ขาออก</span>
-                        </div>
-                      </div>
-                  }
                 </div>
               </div>
             </div>
