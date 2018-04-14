@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import '../CSS/Home.css';
 import '../animate.css'
-import busStop from '../icon.png';
+import busStopIcon from '../icon.png';
 import GoogleMapReact from 'google-map-react';
 import Fa from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free-solid';
 import SideBarList from './ListInSideBar.js';
 import InformModal from './InformModal.js';
 import axios from 'axios';
+import ReactTooltip from 'react-tooltip';
 import { connect } from 'react-redux';
 
 import {InitialData} from '../reducers/roadData/roadDataAction.js';
@@ -32,6 +33,7 @@ class Home extends Component {
       currentBus: 0,
       busInputData: null,
       roadData: null,
+      busStop: [],
       libraries:[
         {name:'ลาดกระบัง'},
         {name:'สนามบินสุวรรณภูมิ'},
@@ -60,7 +62,7 @@ class Home extends Component {
   componentDidMount=()=>{
     axios.get('http://localhost:3000/currentBusPosition')
       .then(data => {
-
+        console.log(data);
     })
     axios.get('http://localhost:3000/currentBusPosition/busData')
       .then(data => {
@@ -95,6 +97,7 @@ class Home extends Component {
       GenBus = this.state.busInputData.filter((eachCurrentBus) => (
         eachCurrentBus.path === this.state.selectedBus
       ))
+      {/*GenBus = this.state.busInputData*/}
       Result = GenBus.map((eachBus) => {
         return(
           <div className="BusPosition" lat={eachBus.lat} lng={eachBus.lng}>
@@ -104,6 +107,23 @@ class Home extends Component {
       })
     }
     return Result;
+  }
+
+  RenderBusStop=()=>{
+    var result = null
+    if(this.state.showRoute === true){
+      result = this.state.busStop.map((eachBus) => {
+        return(
+          <div lat={eachBus.lat} lng={eachBus.lng}>
+            <img src={busStopIcon} data-tip data-for={eachBus.nameTH}/>
+            <ReactTooltip place="right" id={eachBus.nameTH} type="info" effect="solid">
+              <span>{eachBus.nameTH}</span>
+            </ReactTooltip>
+          </div>
+        )
+      })
+    }
+    return result
   }
 
   Polyline=(data)=>{
@@ -164,9 +184,37 @@ class Home extends Component {
   toInformModal=()=>{
     this.setState({
       showRoute:false,
+      zoom:11,
       center:{lat: 13.75, lng: 100.517},
       selectedBus: null,
       selectedPath: null,
+      busStop: [],
+    })
+  }
+
+  getBusStop=(busRoadArr, busPointArr)=>{
+    console.log(busRoadArr)
+    console.log(busPointArr)
+    var busStopArr = []
+    axios.get("http://localhost:3000/roadData/busStop").then(data => {
+      for(var index = 0;index < busRoadArr.length;index++){
+        var temp = data.data.busStop.filter((element)=>(element.busRoad === busRoadArr[index]))
+        var checkStart = false
+        for(var idx = 0;idx < temp[0].busStop.length;idx++){
+          if(temp[0].busStop[idx].nameTH === busPointArr[index]){
+            checkStart = true
+          }
+          if(checkStart){
+            busStopArr.push(temp[0].busStop[idx])
+          }
+          if(temp[0].busStop[idx].nameTH === busPointArr[index+1]){
+            checkStart = false
+          }
+        }
+      }
+      this.setState({
+        busStop: busStopArr,
+      })
     })
   }
 
@@ -180,6 +228,7 @@ class Home extends Component {
           onGoogleApiLoaded={({ map, maps }) => { this.setState({ map: map, maps: maps, mapLoaded: true }) }}
         >
           {this.RenderBus()}
+          {this.RenderBusStop()}
         </GoogleMapReact>
         {this.state.showRoute === false
           ? <div>
@@ -203,6 +252,7 @@ class Home extends Component {
                     results={this.state.results}
                     Polyline={this.Polyline}
                     getSelectedPath={this.getSelectedPath}
+                    getBusStop={this.getBusStop}
                     />
                     <div className="BgSideBar" onClick={()=>this.changeBurgerToggle()} />
                   </div>

@@ -4,6 +4,7 @@ import Fa from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free-solid';
 import axios from 'axios';
 import CsvDownloader from 'react-csv-downloader';
+import DetailModal from './DetailModal.js'
 
 class Report extends Component {
   constructor(){
@@ -13,6 +14,12 @@ class Report extends Component {
       date: null,
       busName: [],
       chosenBus: "all",
+      showDetail: false,
+      busLog: [],
+      overDrive: {},
+      busRoad: "",
+      busID: "",
+      type: "",
     };
   }
 
@@ -72,6 +79,23 @@ class Report extends Component {
     console.log("work")
   }
 
+  toDetail=(data)=>{
+    this.setState({
+      busLog: data.busLock,
+      overDrive: data.overDriveOtherBus,
+      busRoad: data.busRoad,
+      busID: data.busID,
+      type: data.type,
+      showDetail: true,
+    })
+  }
+
+  closeDetail=()=>{
+    this.setState({
+      showDetail: false,
+    })
+  }
+
   showBusGulity=()=>{
     if(this.state.busGulity.length !== 0){
       var result = [];
@@ -93,10 +117,11 @@ class Report extends Component {
               <table className="ReportResult">
                 <tr>
                   <th style={{width:"10%"}}>ลำดับที่</th>
-                  <th style={{width:"25%"}}>เวลา</th>
+                  <th style={{width:"20%"}}>เวลา</th>
                   <th style={{width:"10%"}}>สายรถ</th>
-                  <th style={{width:"25%"}}>ทะเบียนรถ</th>
-                  <th style={{width:"30%"}}>ความผิด</th>
+                  <th style={{width:"20%"}}>ทะเบียนรถ</th>
+                  <th style={{width:"25%"}}>ความผิด</th>
+                  <th style={{width:"15%"}}>รายละเอียด</th>
                 </tr>
                 {result.map((eachList, index) => {
                   return(
@@ -106,6 +131,7 @@ class Report extends Component {
                       <td>{eachList.busRoad}</td>
                       <td>{eachList.busID}</td>
                       <td>{eachList.type}</td>
+                      <td><Fa icon="info-circle" size="lg" className="infoIcon" onClick={()=>this.toDetail(eachList)}/></td>
                     </tr>
                   )
                 })}
@@ -132,10 +158,11 @@ class Report extends Component {
               <table className="ReportResult">
                 <tr>
                   <th style={{width:"10%"}}>ลำดับที่</th>
-                  <th style={{width:"25%"}}>เวลา</th>
+                  <th style={{width:"20%"}}>เวลา</th>
                   <th style={{width:"10%"}}>สายรถ</th>
-                  <th style={{width:"25%"}}>ทะเบียนรถ</th>
-                  <th style={{width:"30%"}}>ความผิด</th>
+                  <th style={{width:"20%"}}>ทะเบียนรถ</th>
+                  <th style={{width:"25%"}}>ความผิด</th>
+                  <th style={{width:"15%"}}>รายละเอียด</th>
                 </tr>
                 {result.map((eachList, index) => {
                   return(
@@ -145,6 +172,7 @@ class Report extends Component {
                       <td>{eachList.busRoad}</td>
                       <td>{eachList.busID}</td>
                       <td>{eachList.type}</td>
+                      <td><Fa icon="info-circle" size="lg" className="infoIcon" onClick={()=>this.toDetail(eachList)}/></td>
                     </tr>
                   )
                 })}
@@ -229,6 +257,10 @@ class Report extends Component {
     var filename ="Report_" + date + "_" + month + "_" + year;
     return(
       <div className="ReportArea">
+        {this.state.showDetail === true
+          ? <DetailModal closeDetail={this.closeDetail} busLog={this.state.busLog} overDrive={this.state.overDrive} busRoad={this.state.busRoad} busID={this.state.busID} type={this.state.type} />
+          : null
+        }
         <div className="ReportTopic">
           <span>รายงานความผิด</span>
         </div>
@@ -281,7 +313,3 @@ class Report extends Component {
 }
 
 export default Report;
-
-
-
-<script></script>

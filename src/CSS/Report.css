@@ -98,3 +98,8 @@ table.ReportResult th, table.ReportResult td {
 table.ReportResult tr:nth-child(even) {
   background-color: #f2f2f2;
 }
+
+.infoIcon {
+  color: #373A47;
+  cursor:pointer;
+}

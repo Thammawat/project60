@@ -1,0 +1,65 @@
+.DetailModalOutside {
+  width:100vw;
+  height: 100vh;
+  position: fixed;
+  z-index: 98;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.DetailModalInside {
+  position: fixed;
+  z-index:99;
+  top:10vh;
+  left:25vw;
+  border-top: 5px solid #373a47;
+  border-radius: 5px;
+  width:50vw;
+  background-color: #EEEEEE;
+  padding:1em;
+}
+
+.DetailModalTopic {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0.5em;
+}
+
+.DetailModalBody {
+  text-align: center;
+  height: 55vh;
+  margin-bottom: 1em;
+  border: 5px solid white;
+  border-radius: 3px;
+}
+
+.DetailModalButtonArea{
+  text-align: center;
+}
+
+button.DetailModalCancelButton {
+  font-size: 18px;
+  border-radius: 10px;
+  padding:0.3em 1em;
+  outline: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button.DetailModalCancelButton {
+  border: 2px solid #373a47;
+  background-color: #EEEEEE;
+  color:#373a47;
+}
+
+button.DetailModalCancelButton:active {
+  border: 2px solid #373a47;
+  background-color: #373a47;
+  color:#EEEEEE;
+}
+
+.FailArea {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 1em;
+}

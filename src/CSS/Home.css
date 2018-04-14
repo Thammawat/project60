@@ -79,22 +79,6 @@ input.FillForm {
   font-size: 16px;
 }
 
-/* button.LoginButton {
-  width:50%;
-  height:3em;
-  font-size: 16px;
-  border-radius: 5px;
-  border:1px solid #A9A9A9;
-  outline:none;
-  height:40px;
-  margin-top: 0.5em;
-}
-
-button.LoginButton:active {
-  background: #373a47;
-  color: #EEEEEE;
-} */
-
 button.LogoutButton{
   width:60%;
   height:3em;
@@ -142,7 +126,6 @@ ul.UserOption li:hover{
 .descriptionBox {
   display: inline-block;
   text-align: center;
-  /* margin-top: 1em; */
   border: 1px solid #A9A9A9;
   border-radius: 5px;
   font-size: 20px;

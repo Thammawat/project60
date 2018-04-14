@@ -7179,6 +7179,13 @@ react-slick@~0.17.0:
     object-assign "^4.1.0"
     opencollective "^1.0.3"
 
+react-tooltip@^3.4.2:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-3.4.2.tgz#aef715d28b43b959a0a4c3501e8f121ffa644777"
+  dependencies:
+    classnames "^2.2.5"
+    prop-types "^15.6.0"
+
 react-transform-catch-errors@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/react-transform-catch-errors/-/react-transform-catch-errors-1.0.2.tgz#1b4d4a76e97271896fc16fe3086c793ec88a9eeb"

@@ -23,6 +23,7 @@ class Modal extends Component {
       showSearch: false,
       busName: null,
       busStop: [],
+      recieveBusStopData: [],
       busPoint: [],
       selectedBusName: null,
       username:null,
@@ -32,6 +33,7 @@ class Modal extends Component {
       roadType: null,
       NoRoute: false,
       checkBus: false,
+      failLogin: false,
     };
   }
 
@@ -49,7 +51,8 @@ class Modal extends Component {
         })
       })
       this.setState({
-        busStop: temp
+        busStop: temp,
+        recieveBusStopData: data.data.busStop,
       })
     })
     var temp = []
@@ -119,12 +122,14 @@ class Modal extends Component {
   handleUsername=(e)=>{
     this.setState({
       username: e.target.value,
+      failLogin:false,
     })
   }
 
   handlePassword=(e)=>{
     this.setState({
       password: e.target.value,
+      failLogin:false,
     })
   }
 
@@ -141,6 +146,7 @@ class Modal extends Component {
       }
     })
     .then(data => {
+      console.log(data)
       if(data.data.result === "success"){
         localStorage.setItem('username',data.data.userData.username)
         localStorage.setItem('firstname',data.data.userData.firstname)
@@ -150,6 +156,11 @@ class Modal extends Component {
         this.props.getUserData(data.data.userData, data.data.token)
         this.context.router.history.push('/dashboard');
       }
+      if(data.data.result === "fail"){
+        this.setState({
+          failLogin:true,
+        })
+      }
     })
     .catch(error => {
       console.log(error)
@@ -158,8 +169,6 @@ class Modal extends Component {
 
   searchPath=(e)=>{
     e.preventDefault()
-    console.log(this.state.box1)
-    console.log(this.state.box2)
     axios.post("http://localhost:3000/roadData/findRoadPath",
     {
       data: {
@@ -231,6 +240,7 @@ class Modal extends Component {
       }
     })
     .then(data => {
+      console.log(data)
       this.props.Polyline(data.data.roadWay)
       var temp = "";
       for(var idx = 0; idx < busRoute.length; idx++){
@@ -264,10 +274,11 @@ class Modal extends Component {
   }
 
   showBusRoute=(data)=>{
-    console.log(data)
     if(data !== null){
+      var StartAndEnd = this.state.recieveBusStopData.filter((eachBus) => (eachBus.busRoad === this.state.busName[data].name))
       this.props.toMapDetail(this.state.busName[data].name, this.state.busName[data].fullname,this.props.roadData[data].centerPath)
       this.props.Polyline(this.props.roadData[data].roadMapBus.roadMap)
+      this.props.getBusStop([this.state.busName[data].name],[StartAndEnd[0].busStop[0].nameTH,StartAndEnd[0].busStop[StartAndEnd[0].busStop.length-1].nameTH])
       this.setState({
         checkBus: false
       })
@@ -331,7 +342,7 @@ class Modal extends Component {
                               return(
                                 <tbody key={index}>
                                   <tr>
-                                    <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>this.showSelectedPath([eachResult], index)}/></td>
+                                    <td><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>{this.showSelectedPath([eachResult], index),this.props.getBusStop([eachResult],this.state.busPoint)}}/></td>
                                     <td>{eachResult}</td>
                                     <td>{this.state.busPoint.map((way, index) => {
                                       if(index === this.state.busPoint.length-1){
@@ -350,7 +361,7 @@ class Modal extends Component {
                                 return(
                                   <tbody key={index}>
                                     <tr>
-                                      <td rowSpan="2"><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>this.showSelectedPath(eachResult.roadPath, index)}/></td>
+                                      <td rowSpan="2"><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>{this.showSelectedPath(eachResult.roadPath, index),this.props.getBusStop(eachResult.roadPath,this.state.busPoint[index].buspoint)}}/></td>
                                       <td>{eachResult.roadPath[0]}</td>
                                       <td>{this.state.busPoint[index].buspoint[0] + " - " + this.state.busPoint[index].buspoint[1]}</td>
                                     </tr>
@@ -365,7 +376,7 @@ class Modal extends Component {
                                 return(
                                   <tbody key={index}>
                                     <tr>
-                                      <td rowSpan="3"><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>this.showSelectedPath(eachResult.roadPath, index)}/></td>
+                                      <td rowSpan="3"><Fa icon="bus" size='lg' className="ToMapIcon" onClick={()=>{this.showSelectedPath(eachResult.roadPath, index),this.props.getBusStop(eachResult.roadPath,this.state.busPoint[index].buspoint)}}/></td>
                                       <td>{eachResult.roadPath[0]}</td>
                                       <td>{this.state.busPoint[index].buspoint[0] + " - " + this.state.busPoint[index].buspoint[1]}</td>
                                     </tr>
@@ -450,7 +461,7 @@ class Modal extends Component {
                     <span>เข้าสู่ระบบ</span>
                   </div>
                   <div className="ModalWarning">
-                    <span>**เฉพาะเจ้าหน้าที่เท่านั้น**</span>
+                    <span>** เฉพาะเจ้าหน้าที่เท่านั้น **</span>
                   </div>
                   <div className="ModalBody">
                     <div>
@@ -461,6 +472,12 @@ class Modal extends Component {
                       <span className="ModalHeading">รหัสผ่าน</span>
                       <input type='password' value={this.state.password} onChange={this.handlePassword} placeholder='กรุณากรอกรหัสผ่าน' className="LoginBox" required/>
                     </div>
+                    {this.state.failLogin === true
+                      ? <div style={{textAlign:"center",color:"red",fontSize:"17px"}}>
+                          <span>ขออภัย ชื่อบัญชีหรือรหัสผ่านไม่ถูกต้อง</span>
+                        </div>
+                      : null
+                    }
                     <div className="LoginArea">
                       <button type="submit" value="submit" className="LoginButton">เข้าสู่ระบบ</button>
                     </div>
