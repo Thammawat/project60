@@ -3,7 +3,7 @@ const router = express.Router()
 const User = require('../model/user')
 const bcrypt = require('bcrypt-nodejs');
 
-router.get('/', function (req, res) {
+router.post('/', function (req, res) {
     if (bcrypt.compareSync(req.body.data.username, req.body.data.token)) {
         User.find({}, function (err, data) {
             if (err) throw err;

@@ -94,7 +94,6 @@ class MemberModal extends Component {
       }
     })
     .then(data => {
-      console.log(data);
       if(data.data.result === "User has Created"){
         this.props.toConfirmModal()
       }

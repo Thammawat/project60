@@ -21,39 +21,43 @@ class Member extends Component {
   }
 
   componentWillMount=()=>{
-    axios.get("http://localhost:3000/user").then(data => {
-      this.setState({
-        allOfUser: data.data.user,
-      })
-    })
+    this.updateMember()
   }
 
   updateMember=()=>{
-    axios.get("http://localhost:3000/user").then(data => {
+    axios.post("http://localhost:3000/user",
+    {
+      data: {
+        token: this.props.userToken,
+        username: this.props.userData.username,
+      }
+    },
+    {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Control-Type': 'application/json'
+      }
+    })
+    .then(data => {
+      console.log(data)
       this.setState({
         allOfUser: data.data.user,
       })
     })
+    .catch(error => {
+      console.log(error)
+    });
   }
 
   changeMemberModalToggle=()=>{
-    axios.get("http://localhost:3000/user").then(data => {
-      this.setState({
-        allOfUser: data.data.user,
-      })
-    })
-    console.log(this.state.allOfUser)
+    this.updateMember()
     this.setState({
       MemberModalToggle: !this.state.MemberModalToggle,
     })
   }
 
   toConfirmModal=()=>{
-    axios.get("http://localhost:3000/user").then(data => {
-      this.setState({
-        allOfUser: data.data.user,
-      })
-    })
+    this.updateMember()
     this.setState({
       MemberModalToggle: false,
       ConfirmModalToggle: true,
@@ -77,6 +81,7 @@ class Member extends Component {
   }
 
   render() {
+    console.log(this.state.allOfUser)
     return(
       <div>
         {this.state.ConfirmModalToggle === true
