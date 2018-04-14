@@ -8,6 +8,7 @@ var roadSchema = new Schema({
   currentCycleOnRoad: Number,
   busStopSequence: { type: Schema.Types.ObjectId, ref: 'BusStopSequence' },
   roadMapBus: { type: Schema.Types.ObjectId, ref: 'RoadMapBus' },
+  roadBusStop: {type: Schema.Types.ObjectId, ref: 'RoadBusStop' },
   centerPath: {
     index: Number,
     lat: { type: Float },

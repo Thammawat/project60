@@ -9,6 +9,7 @@ router.get('/', function (req, res) {
     Road
         .find({})
         .populate('roadMapBus')
+        .populate('roadBusStop')
         .exec(function (err, data) {
             if (err) throw err;
             res.json({ 'roadData': data })
@@ -213,6 +214,14 @@ router.post('/findRoadPath', function (req, res) {
                 })
                 if (finalRoadPath.length !== 0) {
                     var busPoint = []
+                    for(var i = 0;i< finalRoadPath.length-1; i++){
+                        if(finalRoadPath[i].toString() === finalRoadPath[i+1].toString()){
+                            finalRoadPath[i+1] = "null"
+                        }
+                    }
+                    finalRoadPath = finalRoadPath.filter( element => (
+                        element != "null"
+                    ))
                     finalRoadPath.forEach(road => {
                       var point = []
                       var inItPath = 0
@@ -242,7 +251,7 @@ router.post('/findRoadPath', function (req, res) {
                             else if (i === road.roadPath.length - 1) {
                                 point.push(req.body.data.busStop2)
                                 busPoint.push({ buspoint: point })
-                                console.log(busPoint);
+                                // console.log(busPoint);
                             }
                             else {
                                 var busStopPath = roadBusStop.filter(element => (
@@ -311,7 +320,7 @@ router.post('/roadPathWay', function (req, res) {
                         element.index <= busStopPath[0].busStop[endSequence].roadIndex
                     ))
                     roadWay = roadWay.concat(path)
-                    console.log(path)
+                    // console.log(path)
                 }
                 else {
                     for (var i = 0; i < req.body.data.roadPath.length; i++) {
@@ -364,9 +373,9 @@ router.post('/roadPathWay', function (req, res) {
                                 element.index >= busStopPath[0].busStop[inItPath].roadIndex &&
                                 element.index <= busStopPath[0].busStop[endSequence].roadIndex
                             ))
-                            console.log("-------------------")
-                            console.log(path)
-                            console.log(inItPath)
+                            // console.log("-------------------")
+                            // console.log(path)
+                            // console.log(inItPath)
                             roadWay = roadWay.concat(path)
                         }
                         else {
@@ -392,14 +401,14 @@ router.post('/roadPathWay', function (req, res) {
                                 element.index >= busStopPath[0].busStop[startSequence].roadIndex &&
                                 element.index <= busStopPath[0].busStop[endSequence].roadIndex
                             ))
-                            console.log("xxxxxxxxxxxx")
-                            console.log(path)
+                            // console.log("xxxxxxxxxxxx")
+                            // console.log(path)
                             roadWay = roadWay.concat(path)
                         }
                     }
                 }
-                console.log('roadWayyy')
-                console.log(roadWay)
+                // console.log('roadWayyy')
+                // console.log(roadWay)
                 res.json({ 'roadWay': roadWay })
             })
         })
