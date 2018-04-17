@@ -242,7 +242,7 @@ class Home extends Component {
                       <SideBarList listName="ค้นหาเส้นทาง" icon="road" selectedOption={this.sideBarOption}
                       menu='1'
                       />
-                      <SideBarList listName="สายรถเมย์" icon="bus" selectedOption={this.sideBarOption}
+                      <SideBarList listName="สายรถเมล์" icon="bus" selectedOption={this.sideBarOption}
                       menu='2'/>
                       <div className="LoginList">
                         <SideBarList listName="เข้าสู่ระบบ" icon="sign-in-alt" selectedOption={this.sideBarOption} menu='0' />

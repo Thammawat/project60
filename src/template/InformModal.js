@@ -429,24 +429,26 @@ class Modal extends Component {
         {this.props.select === '2'
           ? <div>
               <div className="Modal animated fadeInUp">
-                <div className="ModalTopic">
-                  <span>สายรถเมย์</span>
-                </div>
-                <div className="ModalBody">
-                  <div className="HalfSide">
-                    <span className="ModalHeading">สายรถเมย์</span>
-                    <SearchBox item={this.state.busName} Box="3" getSelectedValue={this.getSelectedValue}/>
+                <form onSubmit={()=>this.showBusRoute(this.state.selectedBusName)}>
+                  <div className="ModalTopic">
+                    <span>สายรถเมล์</span>
                   </div>
-                  {this.state.checkBus === true
-                    ? <div style={{textAlign:'center',color:'red',fontSize:'18px',marginTop:'1em'}}>
-                        <span>** ขออภัย ไม่พบสายรถที่ท่านค้นหา **</span>
-                      </div>
-                    : null
-                  }
-                  <div className="ButtonArea">
-                    <button className="SearchButton" onClick={()=>this.showBusRoute(this.state.selectedBusName)}>ค้นหา</button>
+                  <div className="ModalBody">
+                    <div className="HalfSide">
+                      <span className="ModalHeading">สายรถเมล์</span>
+                      <SearchBox item={this.state.busName} Box="3" getSelectedValue={this.getSelectedValue}/>
+                    </div>
+                    {this.state.checkBus === true
+                      ? <div style={{textAlign:'center',color:'red',fontSize:'18px',marginTop:'1em'}}>
+                          <span>** ขออภัย ไม่พบสายรถที่ท่านค้นหา **</span>
+                        </div>
+                      : null
+                    }
+                    <div className="ButtonArea">
+                      <button type="submit" className="SearchButton">ค้นหา</button>
+                    </div>
                   </div>
-                </div>
+                </form>
               </div>
             </div>
           : null
