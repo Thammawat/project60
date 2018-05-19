@@ -52,7 +52,7 @@ app.use((req, res) => {
   const htmlString = `<!DOCTYPE html>
     <html>
          <head>
-            <title>Hasta la vista JS!</title>
+            <title>Project</title>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB__Mr17aq_LZYOXQr_8_o0NDRCUkIgboE"></script>
             <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry"></script>

@@ -81,7 +81,7 @@ class Member extends Component {
   }
 
   render() {
-    console.log(this.state.allOfUser)
+    console.log(this.props.userToken)
     return(
       <div>
         {this.state.ConfirmModalToggle === true

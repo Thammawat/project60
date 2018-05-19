@@ -4,6 +4,7 @@
   position: fixed;
   z-index: 98;
   background: rgba(0, 0, 0, 0.4);
+  left:0vw;
 }
 
 .ConfirmModalInside {

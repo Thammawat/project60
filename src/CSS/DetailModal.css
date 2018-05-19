@@ -2,8 +2,9 @@
   width:100vw;
   height: 100vh;
   position: fixed;
-  z-index: 98;
+  z-index: 0;
   background: rgba(0, 0, 0, 0.4);
+  left:0vw;
 }
 
 .DetailModalInside {
@@ -62,4 +63,11 @@ button.DetailModalCancelButton:active {
   text-align: center;
   font-size: 22px;
   margin-bottom: 1em;
+}
+
+img.icon {
+  height:40px;
+  position: relative;
+  top:-40px;
+  left:-12px;
 }

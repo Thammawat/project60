@@ -203,3 +203,40 @@ ul.UserOption li:hover{
   height: 17.5px;
   text-align: center;
 }
+
+.onLoading {
+  width:100vw;
+  height: 100vh;
+  position: fixed;
+  z-index: 98;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.loadingModal {
+  background-color: white;
+  border: 1px solid #A9A9A9;
+  border-radius: 5px;
+  text-align: center;
+  position: fixed;
+  z-index: 99;
+  top:35vh;
+  left:42vw;
+  padding: 1em;
+  font-size: 18px;
+}
+
+.zombieMode {
+  padding: 1em;
+  color:#E0E0E0;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.4s;
+}
+
+.zombieMode:hover {
+  background: #272a37;
+}
+
+img.icon {
+  height: 40px;
+}

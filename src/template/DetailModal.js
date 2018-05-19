@@ -3,6 +3,11 @@ import "../CSS/DetailModal.css";
 import GoogleMapReact from 'google-map-react';
 import Fa from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import ReactTooltip from 'react-tooltip';
+
+import StartIcon from '../image/start.png';
+import StopIcon from '../image/stop.png';
+import OverdriveIcon from '../image/Overtake.png';
 
 class DetailModal extends Component {
   constructor(){
@@ -63,10 +68,14 @@ class DetailModal extends Component {
       })
       GulityPolyline.setMap(this.state.map)
     }
-    console.log(this.props.overDrive.busID)
-    if(!this.props.overDrive.busID){
+    if(this.props.overDrive.lat != 0 && this.props.overDrive.lng != 0){
       return(
-        <Fa icon="map-marker-alt" size="2x" style={{color:"blue"}} lat={this.props.overDrive.lat} lng={this.props.overDrive.lng}/>
+        <div lat={this.props.overDrive.lat} lng={this.props.overDrive.lng}>
+          <img src={OverdriveIcon} data-tip data-for="OverdrivePoint" className="icon"/>
+          <ReactTooltip place="right" id="OverdrivePoint" type="warning" effect="solid">
+            <span>จุดแซงกัน</span>
+          </ReactTooltip>
+        </div>
       )
     }
   }
@@ -91,8 +100,18 @@ class DetailModal extends Component {
                   zoom={this.state.zoom}
                   onGoogleApiLoaded={({ map, maps }) => { this.setState({ map: map, maps: maps, mapLoaded: true }) }}
                 >
-                  <Fa icon="dollar-sign" size="2x" style={{color:"blue"}} lat={this.props.busLog[0].lat} lng={this.props.busLog[0].lng}/>
-                  <Fa icon="ban" size="2x" style={{color:"blue"}} lat={this.props.busLog[this.props.busLog.length-1].lat} lng={this.props.busLog[this.props.busLog.length-1].lng}/>
+                  <div lat={this.props.busLog[0].lat} lng={this.props.busLog[0].lng}>
+                    <img src={StartIcon} data-tip data-for="StartingPoint" className="icon"/>
+                    <ReactTooltip place="right" id="StartingPoint" type="warning" effect="solid">
+                      <span>จุดเริ่มต้น</span>
+                    </ReactTooltip>
+                  </div>
+                  <div lat={this.props.busLog[this.props.busLog.length-1].lat} lng={this.props.busLog[this.props.busLog.length-1].lng}>
+                    <img src={StopIcon} data-tip data-for="EndingPoint" className="icon"/>
+                    <ReactTooltip place="right" id="EndingPoint" type="warning" effect="solid">
+                      <span>จุดสิ้นสุด</span>
+                    </ReactTooltip>
+                  </div>
                   {this.RenderDetail()}
                 </GoogleMapReact>
               </div>

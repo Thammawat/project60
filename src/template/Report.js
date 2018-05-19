@@ -25,6 +25,7 @@ class Report extends Component {
 
   componentWillMount=()=>{
     axios.get("http://localhost:3000/busGulity").then(data =>{
+      console.log(data)
       this.setState({
         busGulity: data.data.busGulity,
       })

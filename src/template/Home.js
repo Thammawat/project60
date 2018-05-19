@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import '../CSS/Home.css';
 import '../animate.css'
-import busStopIcon from '../icon.png';
 import GoogleMapReact from 'google-map-react';
 import Fa from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free-solid';
@@ -12,6 +11,11 @@ import ReactTooltip from 'react-tooltip';
 import { connect } from 'react-redux';
 
 import {InitialData} from '../reducers/roadData/roadDataAction.js';
+
+import busStopIcon from '../image/bus_icon.png';
+import busIcon from '../image/bus_icon_circle.png';
+import StartingIcon from '../image/start.png';
+import EndingIcon from '../image/stop.png';
 
 let polyline = null;
 let borderPolyline = null;
@@ -32,8 +36,13 @@ class Home extends Component {
       selectedPath: null,
       currentBus: 0,
       busInputData: null,
+      busAllInputData: null,
       roadData: null,
+      finishedLoading: false,
       busStop: [],
+      showAllBus: false,
+      start: {},
+      stop: {},
       libraries:[
         {name:'ลาดกระบัง'},
         {name:'สนามบินสุวรรณภูมิ'},
@@ -56,13 +65,20 @@ class Home extends Component {
   componentWillMount=()=>{
     axios.get('http://localhost:3000/roadData').then(data => {
       this.props.InitialData(data.data.roadData)
+      setTimeout(()=>{
+        this.setState({
+          finishedLoading: true
+        })
+      },1000)
     })
   }
 
   componentDidMount=()=>{
     axios.get('http://localhost:3000/currentBusPosition')
       .then(data => {
-        console.log(data);
+        this.setState({
+          busAllInputData: data.data.busData
+        })
     })
     axios.get('http://localhost:3000/currentBusPosition/busData')
       .then(data => {
@@ -80,7 +96,9 @@ class Home extends Component {
   updateBusPosition=()=>{
     axios.get('http://localhost:3000/currentBusPosition')
       .then(data => {
-
+        this.setState({
+          busAllInputData: data.data.busData
+        })
       })
     axios.get('http://localhost:3000/currentBusPosition/busData')
       .then(data => {
@@ -94,17 +112,28 @@ class Home extends Component {
     var GenBus = null
     var Result = null
     if(this.state.showRoute === true){
-      GenBus = this.state.busInputData.filter((eachCurrentBus) => (
-        eachCurrentBus.path === this.state.selectedBus
-      ))
-      {/*GenBus = this.state.busInputData*/}
-      Result = GenBus.map((eachBus) => {
-        return(
-          <div className="BusPosition" lat={eachBus.lat} lng={eachBus.lng}>
-            <Fa icon="bus" size="lg" />
-          </div>
-        )
-      })
+      if(this.state.showAllBus === false){
+        GenBus = this.state.busInputData.filter((eachCurrentBus) => (
+          eachCurrentBus.path === this.state.selectedBus
+        ))
+        Result = GenBus.map((eachBus) => {
+          return(
+            <div lat={eachBus.lat} lng={eachBus.lng} style={{position:"relative",zIndex:"20"}}>
+              <img src={busIcon} className="icon" style={{height:"30px",position:"relative",top:"-30px",left:"-15px"}}/>
+            </div>
+          )
+        })
+      }
+      else {
+        GenBus = this.state.busAllInputData
+        Result = GenBus.map((eachBus) => {
+          return(
+            <div lat={eachBus.lat} lng={eachBus.lon} style={{position:"relative",zIndex:"20"}}>
+              <img src={busIcon} style={{height:"30px",position:"relative",top:"-30px",left:"-15px"}}/>
+            </div>
+          )
+        })
+      }
     }
     return Result;
   }
@@ -112,10 +141,20 @@ class Home extends Component {
   RenderBusStop=()=>{
     var result = null
     if(this.state.showRoute === true){
-      result = this.state.busStop.map((eachBus) => {
+      result = this.state.busStop.map((eachBus, index) => {
+        if(index === 0){
+          return(
+            <div lat={eachBus.lat} lng={eachBus.lng}>
+              <img src={busStopIcon} data-tip data-for={eachBus.nameTH} className="icon"/>
+              <ReactTooltip place="right" id={eachBus.nameTH} type="info" effect="solid">
+                <span>{eachBus.nameTH}</span>
+              </ReactTooltip>
+            </div>
+          )
+        }
         return(
           <div lat={eachBus.lat} lng={eachBus.lng}>
-            <img src={busStopIcon} data-tip data-for={eachBus.nameTH}/>
+            <img src={busStopIcon} data-tip data-for={eachBus.nameTH} className="icon"/>
             <ReactTooltip place="right" id={eachBus.nameTH} type="info" effect="solid">
               <span>{eachBus.nameTH}</span>
             </ReactTooltip>
@@ -127,6 +166,10 @@ class Home extends Component {
   }
 
   Polyline=(data)=>{
+    this.setState({
+      start: {lat: data[0].lat, lng: data[0].lng},
+      stop: {lat: data[data.length-1].lat, lng: data[data.length-1].lng}
+    })
     var test = [];
     for(var i = 0; i < data.length; i++){
       var tempObj = {lat:data[i].lat, lng:data[i].lng}
@@ -184,11 +227,19 @@ class Home extends Component {
   toInformModal=()=>{
     this.setState({
       showRoute:false,
+      showAllBus:false,
       zoom:11,
       center:{lat: 13.75, lng: 100.517},
       selectedBus: null,
       selectedPath: null,
       busStop: [],
+    })
+  }
+
+  showZombieMode=()=>{
+    this.setState({
+      showRoute:true,
+      showAllBus:true,
     })
   }
 
@@ -221,6 +272,18 @@ class Home extends Component {
   render() {
     return (
       <div>
+        {this.state.finishedLoading === false
+          ? <div>
+              <div className="onLoading" />
+              <div className="loadingModal">
+                <div style={{display:"block",textAlign:"center",marginBottom:"0.5em"}}>
+                  <Fa icon="spinner" size="3x" spin/>
+                </div>
+                <span style={{display:"block"}}>กำลังโหลดข้อมูล...</span>
+              </div>
+            </div>
+          : null
+        }
         <GoogleMapReact
           center={this.state.center}
           zoom={this.state.zoom}
@@ -229,6 +292,24 @@ class Home extends Component {
         >
           {this.RenderBus()}
           {this.RenderBusStop()}
+          {this.state.showRoute === true && this.state.showAllBus === false
+            ? <div lat={this.state.start.lat} lng={this.state.start.lng}>
+                <img src={StartingIcon} data-tip data-for="StartingPoint" style={{height:"40px",position:"relative",top:"-40px",left:"-10px"}}/>
+                <ReactTooltip place="right" id="StartingPoint" type="warning" effect="solid">
+                  <span>จุดเริ่มต้น</span>
+                </ReactTooltip>
+              </div>
+            : null
+          }
+          {this.state.showRoute === true && this.state.showAllBus === false
+            ? <div lat={this.state.stop.lat} lng={this.state.stop.lng}>
+                <img src={EndingIcon} data-tip data-for="EndingPoint" style={{height:"40px",position:"relative",top:"-40px",left:"-10px"}}/>
+                <ReactTooltip place="right" id="EndingPoint" type="warning" effect="solid">
+                  <span>จุดสิ้นสุด</span>
+                </ReactTooltip>
+              </div>
+            : null
+          }
         </GoogleMapReact>
         {this.state.showRoute === false
           ? <div>
@@ -244,6 +325,12 @@ class Home extends Component {
                       />
                       <SideBarList listName="สายรถเมล์" icon="bus" selectedOption={this.sideBarOption}
                       menu='2'/>
+                      {/* ส่วนแสดงข้อมูลทั้งหมด }
+                      <div className="zombieMode" onClick={this.showZombieMode}>
+                        <Fa icon="globe" size='lg' />
+                        <span style={{margin:"0em 1em",fontSize:"20px"}}>แสดงข้อมูลทั้งหมด</span>
+                      </div>
+                      {/* ส่วนแสดงข้อมูลทั้งหมด */}
                       <div className="LoginList">
                         <SideBarList listName="เข้าสู่ระบบ" icon="sign-in-alt" selectedOption={this.sideBarOption} menu='0' />
                       </div>
@@ -260,16 +347,19 @@ class Home extends Component {
             </div>
           : <div style={{position:'fixed',zIndex:'1',width:'97vw'}}>
               <Fa icon="arrow-left" size="2x" className="backIcon" onClick={()=>{this.toInformModal(),this.removePolyline()}}/>
-              <div style={{textAlign:'center',marginTop:'1em'}}>
-                <div className="descriptionBox">
-                  <div className="showBusLine">
-                    <span>สายที่ {this.state.selectedBus}</span>
+              {this.state.showAllBus === true
+                ? null
+                : <div style={{textAlign:'center',marginTop:'1em'}}>
+                    <div className="descriptionBox">
+                      <div className="showBusLine">
+                        <span>สายที่ {this.state.selectedBus}</span>
+                      </div>
+                      <div className="showPath">
+                        <span>{this.state.selectedPath}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="showPath">
-                    <span>{this.state.selectedPath}</span>
-                  </div>
-                </div>
-              </div>
+              }
             </div>
         }
       </div>

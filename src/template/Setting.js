@@ -141,8 +141,6 @@ class Setting extends Component {
   }
 
   render() {
-    console.log(this.test)
-    console.log(this.num)
     return(
       <div className="SettingArea">
         {this.state.resetPasswordToggle === true

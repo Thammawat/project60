@@ -273,12 +273,13 @@ class Modal extends Component {
     })
   }
 
-  showBusRoute=(data)=>{
-    if(data !== null){
-      var StartAndEnd = this.state.recieveBusStopData.filter((eachBus) => (eachBus.busRoad === this.state.busName[data].name))
-      this.props.toMapDetail(this.state.busName[data].name, this.state.busName[data].fullname,this.props.roadData[data].centerPath)
-      this.props.Polyline(this.props.roadData[data].roadMapBus.roadMap)
-      this.props.getBusStop([this.state.busName[data].name],[StartAndEnd[0].busStop[0].nameTH,StartAndEnd[0].busStop[StartAndEnd[0].busStop.length-1].nameTH])
+  showBusRoute=(e)=>{
+    e.preventDefault()
+    if(this.state.selectedBusName !== null){
+      var StartAndEnd = this.state.recieveBusStopData.filter((eachBus) => (eachBus.busRoad === this.state.busName[this.state.selectedBusName].name))
+      this.props.toMapDetail(this.state.busName[this.state.selectedBusName].name, this.state.busName[this.state.selectedBusName].fullname,this.props.roadData[this.state.selectedBusName].centerPath)
+      this.props.Polyline(this.props.roadData[this.state.selectedBusName].roadMapBus.roadMap)
+      this.props.getBusStop([this.state.busName[this.state.selectedBusName].name],[StartAndEnd[0].busStop[0].nameTH,StartAndEnd[0].busStop[StartAndEnd[0].busStop.length-1].nameTH])
       this.setState({
         checkBus: false
       })
@@ -429,7 +430,7 @@ class Modal extends Component {
         {this.props.select === '2'
           ? <div>
               <div className="Modal animated fadeInUp">
-                <form onSubmit={()=>this.showBusRoute(this.state.selectedBusName)}>
+                <form onSubmit={this.showBusRoute}>
                   <div className="ModalTopic">
                     <span>สายรถเมล์</span>
                   </div>
